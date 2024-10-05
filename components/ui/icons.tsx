@@ -1,4 +1,4 @@
-import { LucideProps, Loader2, LucideIcon } from 'lucide-react'
+import { Loader2, LucideIcon } from 'lucide-react'
 import { FaGoogle } from 'react-icons/fa'
 import { FaMicrosoft } from 'react-icons/fa'
 

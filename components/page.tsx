@@ -33,7 +33,7 @@ export function LandingPageComponent() {
                   Plot Twist
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Where every mystery has a twist and it's yours to create
+                  Where every mystery has a twist and it&apos;s yours to create
                 </p>
               </div>
               <Link href="/signin">

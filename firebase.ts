@@ -2,13 +2,12 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
-  // Your Firebase configuration object
-  apiKey: "AIzaSyBtsJdbKK1a_8OLix3k6ntz0eSUoVtNd44",
-  authDomain: "plot-twist-574eb.firebaseapp.com",
-  projectId: "plot-twist-574eb",
-  storageBucket: "plot-twist-574eb.appspot.com",
-  messagingSenderId: "939004725402",
-  appId: "1:939004725402:web:8fa4ed6376984379c1b723"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 // Initialize Firebase

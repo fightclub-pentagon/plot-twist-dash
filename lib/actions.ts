@@ -3,7 +3,7 @@
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 
-export async function signIn(prevState: any, formData: FormData) {
+export async function signIn(prevState: unknown, formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
@@ -12,10 +12,10 @@ export async function signIn(prevState: any, formData: FormData) {
     const user = userCredential.user;
     console.log("User signed in:", user);
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error signing in:", error);
     return {
-      message: error.message || 'An error occurred during sign in.'
+      message: error instanceof Error ? error.message : 'An error occurred during sign in.'
     };
   }
 }

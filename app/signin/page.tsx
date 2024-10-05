@@ -8,10 +8,6 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthP
 import { auth } from '@/firebase'
 import { useRouter } from 'next/navigation'
 
-const initialState = {
-  message: '',
-}
-
 export default function SignInPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,8 +22,9 @@ export default function SignInPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password)
       router.push('/')//('/dashboard')
-    } catch (error: any) {
-      setError(error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      setError(errorMessage);
     } finally {
       setIsLoading(false)
     }
@@ -50,8 +47,9 @@ export default function SignInPage() {
       console.log('Email:', result.user.email)
 
       router.push('/')//('/dashboard')
-    } catch (error: any) {
-      setError(error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      setError(errorMessage);
     } finally {
       setIsLoading(false)
     }
@@ -64,8 +62,9 @@ export default function SignInPage() {
       const provider = new OAuthProvider('microsoft.com')
       await signInWithPopup(auth, provider)
       router.push('/')//('/dashboard')
-    } catch (error: any) {
-      setError(error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      setError(errorMessage);
     } finally {
       setIsLoading(false)
     }
