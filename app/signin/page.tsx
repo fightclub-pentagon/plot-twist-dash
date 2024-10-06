@@ -7,6 +7,7 @@ import { Icons } from "@/components/ui/icons"
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider } from 'firebase/auth'
 import { auth } from '@/firebase'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
@@ -20,7 +21,17 @@ export default function SignInPage() {
     setIsLoading(true)
     setError('')
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      
+      // Print the entire response
+      console.log('Firebase Auth Response:', userCredential)
+      
+      // Print specific user information
+      console.log('User:', userCredential.user)
+      console.log('User ID:', userCredential.user.uid)
+      console.log('Display Name:', userCredential.user.displayName)
+      console.log('Email:', userCredential.user.email)
+
       router.push('/')//('/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
@@ -107,6 +118,12 @@ export default function SignInPage() {
               </Button>
             </div>
           </form>
+          <p className="text-sm text-center">
+            Don&apos;t have an account?{" "}
+            <Link href="/signup" className="text-blue-500 hover:underline">
+              Sign up
+            </Link>
+          </p>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />

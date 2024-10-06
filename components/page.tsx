@@ -36,12 +36,20 @@ export function LandingPageComponent() {
                   Where every mystery has a twist and it&apos;s yours to create
                 </p>
               </div>
-              <Link href="/signin">
-                <Button className="inline-flex items-center justify-center">
-                  Sign In
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="flex space-x-4">
+                <Link href="/signin">
+                  <Button className="inline-flex items-center justify-center">
+                    Sign In
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button variant="outline" className="inline-flex items-center justify-center">
+                    Sign Up
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
