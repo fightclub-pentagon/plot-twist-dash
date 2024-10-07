@@ -4,12 +4,14 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/ui/icons"
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider } from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, UserCredential } from 'firebase/auth'
 import { auth } from '@/firebase'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useUser } from '@/contexts/UserContext'
 
 export default function SignInPage() {
+  const { setUser } = useUser()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -21,8 +23,11 @@ export default function SignInPage() {
     setIsLoading(true)
     setError('')
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password)
       
+      // Store the user information in the global context and localStorage
+      setUser(userCredential.user)
+
       // Print the entire response
       console.log('Firebase Auth Response:', userCredential)
       
@@ -32,7 +37,7 @@ export default function SignInPage() {
       console.log('Display Name:', userCredential.user.displayName)
       console.log('Email:', userCredential.user.email)
 
-      router.push('/')//('/dashboard')
+      router.push('/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       setError(errorMessage);
@@ -46,8 +51,11 @@ export default function SignInPage() {
     setError('')
     try {
       const provider = new GoogleAuthProvider()
-      const result = await signInWithPopup(auth, provider)
+      const result: UserCredential = await signInWithPopup(auth, provider)
       
+      // Store the user information in the global context and localStorage
+      setUser(result.user)
+
       // Print the entire response
       console.log('Firebase Auth Response:', result)
       
@@ -57,7 +65,7 @@ export default function SignInPage() {
       console.log('Display Name:', result.user.displayName)
       console.log('Email:', result.user.email)
 
-      router.push('/')//('/dashboard')
+      router.push('/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       setError(errorMessage);
@@ -71,8 +79,11 @@ export default function SignInPage() {
     setError('')
     try {
       const provider = new OAuthProvider('microsoft.com')
-      await signInWithPopup(auth, provider)
-      router.push('/')//('/dashboard')
+      const result: UserCredential = await signInWithPopup(auth, provider)
+
+      // Store the user information in the global context 
+      setUser(result.user)
+      router.push('/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       setError(errorMessage);
