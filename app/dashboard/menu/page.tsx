@@ -1,6 +1,5 @@
 import { AppFrameComponent } from '@/components/app-frame'
 import { SignOutButton } from '@/components/signout-btn'
-import { Button } from '@/components/ui/button'
 
 export default function MenuPage() {
   return (

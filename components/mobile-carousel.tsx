@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Users } from 'lucide-react'
+import Image from 'next/image'
 
 interface CarouselItem {
   id: number
@@ -62,7 +63,7 @@ export function MobileCarouselComponent({ title }: MobileCarouselProps) {
                 className="flex-shrink-0 w-48 h-48 relative rounded-lg overflow-hidden"
                 style={{ scrollSnapAlign: 'start' }}
               >
-                <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+                <Image src={item.imageUrl} alt={item.title} width={200} height={200} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-between p-3">
                   <h3 className="text-white font-bold">{item.title}</h3>
                   <div className="flex items-center justify-end text-white">

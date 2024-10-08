@@ -75,7 +75,7 @@ export function MyGamesComponent() {
     };
 
     fetchGames()
-  }, [user])
+  }, [user, API_URL])
 
   const handleGameClick = (game: Game) => {
     setFeaturedGame(game)
@@ -126,37 +126,37 @@ export function MyGamesComponent() {
       )}
 
       {/* Game List Section (2/3 of the screen) */}
-      <div className="flex-grow h-2/3 bg-gray-900">
-        <h2 className="text-xl font-semibold p-4 pb-2 text-white">Game List</h2>
-        <ScrollArea className="h-[calc(100%-3rem)] rounded-md">
-          <div className="p-4 pt-0">
-            {games.map((game) => (
-              <div 
-                key={game.game_id} 
-                className="mb-4 p-[3px] rounded-xl bg-gradient-to-br from-green-500 to-purple-500 cursor-pointer hover:from-green-400 hover:to-purple-400 transition-colors"
-                onClick={() => handleGameClick(game)}
-              >
-                <div className="flex items-center space-x-4 p-2 bg-black rounded-lg">
-                  <Image
-                    src={game.image || '/placeholder.png'}
-                    alt={game.title}
-                    width={50}
-                    height={50}
-                    className="rounded-md object-cover"
-                  />
-                  <div className="flex-1">
-                    <h3 className="font-medium text-white">{game.title}</h3>
-                    <div className="flex items-center text-sm text-gray-300">
-                      <Users className="w-4 h-4 mr-1" aria-hidden="true" />
-                      <span>{game.number_of_players} players</span>
-                    </div>
-                  </div>
-                </div>
+<div className="flex-grow h-2/3 bg-gray-900">
+  <h2 className="text-xl font-semibold p-4 pb-2 text-white">Game List</h2>
+  <ScrollArea className="h-[calc(100%-3rem)] rounded-md">
+    <div className="p-4 pt-0">
+      {games.map((game) => (
+        <div 
+          key={game.game_id} 
+          className="mb-4 p-[3px] rounded-xl bg-gradient-to-br from-green-500 to-purple-500 cursor-pointer hover:from-green-400 hover:to-purple-400 transition-colors"
+          onClick={() => handleGameClick(game)}
+        >
+          <div className="flex items-center space-x-4 p-2 bg-black rounded-lg h-24 overflow-hidden">
+            <Image
+              src={game.image || '/placeholder.png'}
+              alt={game.title}
+              width={50}
+              height={50}
+              className="rounded-md object-cover flex-shrink-0"
+            />
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-white truncate">{game.title}</h3>
+              <div className="flex items-center text-sm text-gray-300">
+                <Users className="w-4 h-4 mr-1 flex-shrink-0" aria-hidden="true" />
+                <span>{game.number_of_players} players</span>
               </div>
-            ))}
+            </div>
           </div>
-        </ScrollArea>
-      </div>
+        </div>
+      ))}
+    </div>
+  </ScrollArea>
+</div>
     </div>
   )
 }
