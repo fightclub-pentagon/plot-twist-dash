@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Users } from "lucide-react"
 import { useUser } from '@/contexts/UserContext'
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation'
 
 interface Game {
   game_id: number
@@ -17,6 +18,7 @@ interface Game {
 
 export function MyGamesComponent() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL
+  const router = useRouter()
   const [games, setGames] = useState<Game[]>([])
   const [featuredGame, setFeaturedGame] = useState<Game | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -117,7 +119,11 @@ export function MyGamesComponent() {
                 <p className="text-sm">{featuredGame.presentation_text}</p>
               </div>
               {/* Fixed Button */}
-              <Button className="mt-4" variant="secondary">
+              <Button 
+                className="mt-4" 
+                variant="secondary" 
+                onClick={() => featuredGame && router.push(`/game/${featuredGame.game_id}`)}
+              >
                 Play Now
               </Button>
             </div>
