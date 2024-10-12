@@ -5,16 +5,16 @@ import Image from 'next/image'
 import { ArrowLeft, Copy, QrCode } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from 'next/link'
 
-export function CreateGameplay({ gameId }: { gameId: string }) {
+export function InviteGameplay({ gameplayId }: { gameplayId: string }) {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [, setIsCopied] = useState(false)
   const [copyButtonColor, setCopyButtonColor] = useState('bg-purple-700')
 
-  const gameUrl = `https://game.com/${gameId}`
+  const gameUrl = `https://game.com/${gameplayId}`
   const players = [
     { name: 'Alice', avatar: '/placeholder.png' },
     { name: 'Bob', avatar: '/placeholder.png' }
@@ -92,6 +92,12 @@ export function CreateGameplay({ gameId }: { gameId: string }) {
 
       <Dialog open={isQRModalOpen} onOpenChange={setIsQRModalOpen}>
         <DialogContent className="sm:max-w-md bg-gray-800 text-white">
+          <DialogTitle className="sr-only">
+            QR Code for Game Invitation
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Scan this QR code to join the game
+          </DialogDescription>
           <div className="relative w-full aspect-square">
             <Image
               src="/placeholder.png"

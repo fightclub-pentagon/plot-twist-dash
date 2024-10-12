@@ -19,11 +19,37 @@ export function GamePage({ gameId }: { gameId: string }) {
   const [game, setGame] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [gameplayId, setGameplayId] = useState<string | null>(null);
   const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const handleStartGame = () => {
-    router.push(`/game/${gameId}/start`);
+  const createGameplay = async (gameId: string) => {
+    try {
+      const token = localStorage.getItem('userToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      const gameplayResponse: Response = await fetch(`${API_URL}/game/${gameId}/play`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      if (!gameplayResponse.ok) {
+        throw new Error('Failed to create gameplay');
+      }
+
+      const gameplayData = await gameplayResponse.json();
+      setGameplayId(gameplayData.gameplay_id);
+    } catch (error) {
+      console.error('Error creating gameplay:', error);
+    }
+  };
+
+  const handleStartGame = async () => {
+    await createGameplay(gameId);
+    router.push(`/gameplay/${gameplayId}`);
   };
 
   useEffect(() => {
