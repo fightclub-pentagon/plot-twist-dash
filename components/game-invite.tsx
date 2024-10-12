@@ -14,12 +14,18 @@ export function InviteGameplay({ gameplayId }: { gameplayId: string }) {
   const [, setIsCopied] = useState(false)
   const [copyButtonColor, setCopyButtonColor] = useState('bg-purple-700')
 
-  const gameUrl = `https://game.com/${gameplayId}`
+  const gameUrl = `localhost:3000/gameplay/${gameplayId}`
   const players = [
     { name: 'Alice', avatar: '/placeholder.png' },
     { name: 'Bob', avatar: '/placeholder.png' }
   ]
   const totalPlayers = 5
+
+  const generateQRCode = (url: string): string => {
+    const encodedUrl = encodeURIComponent(url)
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodedUrl}`
+    return qrCodeUrl
+  }
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(gameUrl)
@@ -100,7 +106,7 @@ export function InviteGameplay({ gameplayId }: { gameplayId: string }) {
           </DialogDescription>
           <div className="relative w-full aspect-square">
             <Image
-              src="/placeholder.png"
+              src={generateQRCode(gameUrl)}
               alt="QR Code"
               fill
               className="object-contain"

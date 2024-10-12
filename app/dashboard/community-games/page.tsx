@@ -1,7 +1,10 @@
+'use client'
+
+import { withTierAccess } from '@/components/withTierAccess';
 import { AppFrameComponent } from '@/components/app-frame'
 import { MobileCarouselComponent } from '@/components/mobile-carousel'
 
-export default function CommunityGamesPage() {
+function CommunityGamesPage() {
   return (
     <AppFrameComponent>
       <div className="p-4">
@@ -18,5 +21,7 @@ export default function CommunityGamesPage() {
         <MobileCarouselComponent title='Recently Played' />
       </div>
     </AppFrameComponent>
-  )
+  );
 }
+
+export default withTierAccess(CommunityGamesPage);

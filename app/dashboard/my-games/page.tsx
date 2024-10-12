@@ -1,10 +1,15 @@
+'use client'
+
+import { withTierAccess } from '@/components/withTierAccess';
 import { AppFrameComponent } from '@/components/app-frame'
 import { MyGamesComponent } from '@/components/my-games-component'
 
-export default function MyGamesPage() {
+function MyGamesPage() {
   return (
     <AppFrameComponent>
       <MyGamesComponent />
     </AppFrameComponent>
   )
 }
+
+export default withTierAccess(MyGamesPage);

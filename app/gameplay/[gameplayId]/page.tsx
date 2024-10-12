@@ -1,3 +1,4 @@
+
 import { InviteGameplay } from "@/components/game-invite";
 
 interface InviteGameplayProps {
@@ -8,4 +9,4 @@ interface InviteGameplayProps {
 
 export default function Gameplay({ params }: InviteGameplayProps) {
     return <InviteGameplay gameplayId={params.gameplayId} />
-  }
+}

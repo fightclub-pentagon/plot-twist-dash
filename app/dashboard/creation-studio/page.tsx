@@ -1,7 +1,10 @@
+'use client'
+
+import { withTierAccess } from '@/components/withTierAccess';
 import { AppFrameComponent } from '@/components/app-frame'
 import { GameCreatorComponent } from '@/components/game-creator'
 
-export default function CreationStudioPage() {
+function CreationStudioPage() {
   return (
     <AppFrameComponent>
       <div className="p-4">
@@ -10,3 +13,5 @@ export default function CreationStudioPage() {
     </AppFrameComponent>
   )
 }
+
+export default withTierAccess(CreationStudioPage);

@@ -19,11 +19,10 @@ export function GamePage({ gameId }: { gameId: string }) {
   const [game, setGame] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [gameplayId, setGameplayId] = useState<string | null>(null);
   const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const createGameplay = async (gameId: string) => {
+  const createGameplay = async (gameId: string): Promise<string | null> => {
     try {
       const token = localStorage.getItem('userToken');
       if (!token) {
@@ -41,14 +40,15 @@ export function GamePage({ gameId }: { gameId: string }) {
       }
 
       const gameplayData = await gameplayResponse.json();
-      setGameplayId(gameplayData.gameplay_id);
+      return gameplayData.id;
     } catch (error) {
       console.error('Error creating gameplay:', error);
+      return null;
     }
   };
 
-  const handleStartGame = async () => {
-    await createGameplay(gameId);
+  const handleCreateGameplay = async () => {
+    const gameplayId: string | null = await createGameplay(gameId);
     router.push(`/gameplay/${gameplayId}`);
   };
 
@@ -160,7 +160,7 @@ export function GamePage({ gameId }: { gameId: string }) {
 
       <Button 
         className="w-full bg-purple-700 hover:bg-purple-600 text-white"
-        onClick={handleStartGame}
+        onClick={handleCreateGameplay}
       >
         Invite friends & PLAY
       </Button>
