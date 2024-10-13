@@ -6,8 +6,8 @@ import { useUser } from '@/contexts/UserContext';
 import { AppFrameComponent } from '@/components/app-frame';
 import { UpgradeMessage } from '@/components/upgrade-message';
 
-export function withTierAccess(WrappedComponent: React.ComponentType) {
-  return function TierAccessComponent(props: any) {
+export function withTierAccess<P extends object>(WrappedComponent: React.ComponentType<P>) {
+  return function TierAccessComponent(props: P) {
     const { user } = useUser();
     const router = useRouter();
     const [userTier, setUserTier] = useState<string | null>(null);

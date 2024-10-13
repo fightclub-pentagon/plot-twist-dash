@@ -8,18 +8,15 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from 'next/link'
+import { GameplayData } from '@/app/gameplay/[gameplayId]/page'
 
-export function InviteGameplay({ gameplayId }: { gameplayId: string }) {
+export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData }) {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [, setIsCopied] = useState(false)
   const [copyButtonColor, setCopyButtonColor] = useState('bg-purple-700')
 
-  const gameUrl = `localhost:3000/gameplay/${gameplayId}`
-  const players = [
-    { name: 'Alice', avatar: '/placeholder.png' },
-    { name: 'Bob', avatar: '/placeholder.png' }
-  ]
-  const totalPlayers = 5
+  const { users, number_of_players } = gameplayData
+  const currentPageUrl = `localhost:3000/gameplay/${gameplayData.id}`
 
   const generateQRCode = (url: string): string => {
     const encodedUrl = encodeURIComponent(url)
@@ -28,7 +25,7 @@ export function InviteGameplay({ gameplayId }: { gameplayId: string }) {
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(gameUrl)
+    navigator.clipboard.writeText(currentPageUrl)
     setIsCopied(true)
     setCopyButtonColor(prev => prev === 'bg-purple-700' ? 'bg-green-500' : 'bg-purple-700')
     setTimeout(() => {
@@ -61,7 +58,7 @@ export function InviteGameplay({ gameplayId }: { gameplayId: string }) {
         </p>
         <div className="flex items-center">
           <Input
-            value={gameUrl}
+            value={currentPageUrl}
             readOnly
             className="flex-grow mr-2 bg-gray-800 border-gray-700 text-white"
           />
@@ -79,16 +76,16 @@ export function InviteGameplay({ gameplayId }: { gameplayId: string }) {
       <section>
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-lg font-semibold">Party room</h2>
-          <span className="text-sm text-gray-300">{players.length}/{totalPlayers}</span>
+          <span className="text-sm text-gray-300">{users.length}/{number_of_players}</span>
         </div>
         <ul className="space-y-2 mb-6">
-          {players.map((player, index) => (
+          {users.map((user, index) => (
             <li key={index} className="bg-gray-800 p-2 rounded-md flex items-center">
               <Avatar className="h-8 w-8 mr-2">
-                <AvatarImage src={player.avatar} alt={player.name} />
-                <AvatarFallback>{player.name[0]}</AvatarFallback>
+                <AvatarImage src={user.avatar || ''} alt={user.username} />
+                <AvatarFallback>{user.username[0]}</AvatarFallback>
               </Avatar>
-              {player.name}
+              {user.username}
             </li>
           ))}
         </ul>
@@ -106,7 +103,7 @@ export function InviteGameplay({ gameplayId }: { gameplayId: string }) {
           </DialogDescription>
           <div className="relative w-full aspect-square">
             <Image
-              src={generateQRCode(gameUrl)}
+              src={generateQRCode(currentPageUrl)}
               alt="QR Code"
               fill
               className="object-contain"
