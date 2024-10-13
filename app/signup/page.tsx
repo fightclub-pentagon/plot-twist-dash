@@ -4,9 +4,10 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/ui/icons"
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential } from 'firebase/auth'
 import { auth } from '@/firebase'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useUser } from '@/contexts/UserContext'
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('')
@@ -14,8 +15,26 @@ export default function SignUpPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [username, setUsername] = useState('')
+  const { user, setUser } = useUser()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/dashboard'
 
+  const createUserInDatabase = async (email: string, username: string, signin_method: string) => {
+    // create user in database
+    // make a request to http://localhost:5001/user with username and email
+    // include the token in the request
+    const token = await auth.currentUser?.getIdToken()
+    const response = await fetch('http://localhost:5001/user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ username, email, signin_method })
+    })
+    if (!response.ok) {
+      throw new Error('Failed to create user in database')
+    }
+  }
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password !== confirmPassword) {
@@ -26,7 +45,12 @@ export default function SignUpPage() {
     setError('')
     try {
       await createUserWithEmailAndPassword(auth, email, password)
-      router.push('/') // Redirect to home page after successful signup
+      await createUserInDatabase(email, username, 'email')
+      const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password)
+      
+      // Store the user information in the global context and localStorage
+      setUser(userCredential.user)
+      router.push(redirect || '/dashboard');
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
       setError(errorMessage)
@@ -39,7 +63,7 @@ export default function SignUpPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Create an account</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Create an account with email</h1>
           <p className="text-sm text-muted-foreground">Enter your email below to create your account</p>
         </div>
         <div className="grid gap-6">
@@ -55,6 +79,14 @@ export default function SignUpPage() {
                   autoCorrect="off"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Input
+                  id="username"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
                 />
                 <Input
                   id="password"
@@ -64,6 +96,7 @@ export default function SignUpPage() {
                   autoCorrect="off"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
                 <Input
                   id="confirmPassword"
@@ -73,6 +106,7 @@ export default function SignUpPage() {
                   autoCorrect="off"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
                 />
               </div>
               <Button disabled={isLoading}>

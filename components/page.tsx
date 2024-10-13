@@ -43,12 +43,14 @@ export function LandingPageComponent() {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
+                {/*
                 <Link href="/signup">
                   <Button variant="outline" className="inline-flex items-center justify-center">
                     Sign Up
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
+                */}
               </div>
             </div>
           </div>

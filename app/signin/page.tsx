@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { useUser } from '@/contexts/UserContext'
 
 export default function SignInPage() {
-  const { setUser } = useUser()
+  const { user, setUser } = useUser()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -20,16 +20,53 @@ export default function SignInPage() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
 
+  const isUserExistentInDatabase = async () => {
+    try {
+      const token = await auth.currentUser?.getIdToken()
+      const response = await fetch(`http://localhost:5001/user/${user?.uid}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      return response.ok
+    } catch (error) {
+      console.error('Error checking user existence:', error)
+      throw error
+    }
+  }
+
+  const createUserInDatabase = async (email: string, username: string, signin_method: string) => {
+    try {
+      const token = await auth.currentUser?.getIdToken()
+      const response = await fetch('http://localhost:5001/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ email, username, signin_method })
+      })
+    } catch (error) {
+      console.error('Error creating user in database:', error)
+      throw error
+    }
+  }
+
+  const makeSureUserIsInDatabase = async (result: UserCredential) => {
+    if (!result.user.email) {
+      throw new Error('User email is not available')
+    }
+    else if (!(await isUserExistentInDatabase())) {
+      let signin_method = result.user.providerData[0]?.providerId ?? ''
+      await createUserInDatabase(result.user.email, result.user.displayName ?? '', signin_method)
+    }
+  }
+
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError('')
     try {
       const userCredential: UserCredential = await signInWithEmailAndPassword(auth, email, password)
-      
+      console.log('User credential:', userCredential)
       // Store the user information in the global context and localStorage
       setUser(userCredential.user)
-
+      await makeSureUserIsInDatabase(userCredential)
       // Print the entire response
       console.log('Firebase Auth Response:', userCredential)
       
@@ -57,7 +94,7 @@ export default function SignInPage() {
       
       // Store the user information in the global context and localStorage
       setUser(result.user)
-
+      await makeSureUserIsInDatabase(result)
       // Print the entire response
       console.log('Firebase Auth Response:', result)
       
@@ -67,7 +104,7 @@ export default function SignInPage() {
       console.log('Display Name:', result.user.displayName)
       console.log('Email:', result.user.email)
 
-      router.push('/dashboard')
+      router.push(redirect || '/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       setError(errorMessage);
@@ -85,7 +122,8 @@ export default function SignInPage() {
 
       // Store the user information in the global context 
       setUser(result.user)
-      router.push('/dashboard')
+      await makeSureUserIsInDatabase(result)
+      router.push(redirect || '/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       setError(errorMessage);
@@ -98,10 +136,34 @@ export default function SignInPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Sign in to your account</h1>
-          <p className="text-sm text-muted-foreground">Enter your email below to sign in to your account</p>
+          <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
+          <p className="text-sm text-muted-foreground">Quick signin with your favorite provider</p>
         </div>
         <div className="grid gap-6">
+          <Button variant="outline" type="button" disabled={isLoading} onClick={handleGoogleSignIn}>
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Icons.google className="mr-2 h-4 w-4" />
+            )}{" "}
+            Google
+          </Button>
+          <Button variant="outline" type="button" disabled={isLoading} onClick={handleMicrosoftSignIn}>
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Icons.microsoft className="mr-2 h-4 w-4" />
+            )}{" "}
+            Microsoft
+          </Button>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or sign in with your email</span>
+            </div>
+          </div>
           <form onSubmit={handleEmailSignIn}>
             <div className="grid gap-2">
               <div className="grid gap-1">
@@ -132,35 +194,11 @@ export default function SignInPage() {
             </div>
           </form>
           <p className="text-sm text-center">
-            Don&apos;t have an account?{" "}
+            Would you like to sign in with email but you don&apos;t have an account?{" "}
             <Link href="/signup" className="text-blue-500 hover:underline">
               Sign up
             </Link>
           </p>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
-          <Button variant="outline" type="button" disabled={isLoading} onClick={handleGoogleSignIn}>
-            {isLoading ? (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Icons.google className="mr-2 h-4 w-4" />
-            )}{" "}
-            Google
-          </Button>
-          <Button variant="outline" type="button" disabled={isLoading} onClick={handleMicrosoftSignIn}>
-            {isLoading ? (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Icons.microsoft className="mr-2 h-4 w-4" />
-            )}{" "}
-            Microsoft
-          </Button>
         </div>
         {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
