@@ -4,6 +4,8 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { InviteGameplay } from "@/components/game-invite"
 import io, { Socket } from 'socket.io-client'
+import { useUser } from '@/contexts/UserContext'
+import { GameplayInvitation } from '@/components/gameplay-invitation'
 
 interface RevelationCardResponse {
   id: number
@@ -109,6 +111,7 @@ function useSocket(gameplayId: string) {
 }
 
 export default function Gameplay() {
+  const { user } = useUser()
   const { gameplayId } = useParams()
   const [isLoading, setIsLoading] = useState(true)
   const [gameplayData, setGameplayData] = useState<GameplayData | null>(null)
@@ -198,6 +201,10 @@ export default function Gameplay() {
       socket.off('player_joined_gameplay', handlePlayerJoined)
     }
   }, [socket])
+
+  if (!user) {
+    return <GameplayInvitation gameplayId={gameplayId as string} />
+  }
 
   if (isLoading) {
     return <h1>Loading...</h1>

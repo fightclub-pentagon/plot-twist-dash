@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/ui/icons"
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, UserCredential } from 'firebase/auth'
 import { auth } from '@/firebase'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useUser } from '@/contexts/UserContext'
 
@@ -17,6 +17,8 @@ export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/dashboard'
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,7 +39,7 @@ export default function SignInPage() {
       console.log('Display Name:', userCredential.user.displayName)
       console.log('Email:', userCredential.user.email)
 
-      router.push('/dashboard')
+      router.push(redirect || '/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       setError(errorMessage);
