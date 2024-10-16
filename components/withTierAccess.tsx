@@ -5,10 +5,12 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/contexts/UserContext';
 import { AppFrameComponent } from '@/components/app-frame';
 import { UpgradeMessage } from '@/components/upgrade-message';
+import { useToast } from './toast';
 
 export function withTierAccess<P extends object>(WrappedComponent: React.ComponentType<P>) {
   return function TierAccessComponent(props: P) {
     const { user } = useUser();
+    const { addToast } = useToast();
     const router = useRouter();
     const [userTier, setUserTier] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -29,10 +31,19 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
               const userData = await response.json();
               setUserTier(userData.tier);
             } else {
-              console.error('Failed to fetch user tier');
+              addToast({
+                type: 'error',
+                title: 'Sorry we lost you... 😓',
+                message: 'Please go back to the home page and sign in again.'
+              })
             }
           } catch (error) {
             console.error('Error fetching user tier:', error);
+            addToast({
+              type: 'error',
+              title: 'Sorry we lost you... 😓',
+              message: 'Please go back to the home page and sign in again.'
+            })
           } finally {
             setIsLoading(false);
           }

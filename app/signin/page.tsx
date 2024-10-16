@@ -9,6 +9,8 @@ import { auth } from '@/firebase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useUser } from '@/contexts/UserContext'
+import { useToast } from '@/components/toast'
+import { ToastProvider } from '@/components/toast'
 
 function SignInContent() {
   const { user, setUser } = useUser()
@@ -18,6 +20,7 @@ function SignInContent() {
   const [error, setError] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { addToast } = useToast()
   const redirect = searchParams.get('redirect') || '/dashboard'
 
   const isUserExistentInDatabase = async () => {
@@ -44,6 +47,11 @@ function SignInContent() {
       if (!response.ok) {
         throw new Error('Failed to create user in database')
       }
+      addToast({
+        type: 'success',
+        title: 'Welcome to the club! 🎉',
+        message: 'You have created your account. We hope you enjoy creating your own murder mysteries and hosting the coolest parties in town. 😉'
+      })
     } catch (error) {
       console.error('Error creating user in database:', error)
       throw error
@@ -70,6 +78,11 @@ function SignInContent() {
       // Store the user information in the global context and localStorage
       setUser(userCredential.user)
       await makeSureUserIsInDatabase(userCredential)
+      addToast({
+        type: 'success',
+        title: 'Sign in successful',
+        message: 'You have successfully signed in ✅'
+      })
       // Print the entire response
       console.log('Firebase Auth Response:', userCredential)
       
@@ -82,6 +95,11 @@ function SignInContent() {
       router.push(redirect || '/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      addToast({
+        type: 'error',
+        title: 'Sign in failed',
+        message: errorMessage
+      })
       setError(errorMessage);
     } finally {
       setIsLoading(false)
@@ -98,6 +116,11 @@ function SignInContent() {
       // Store the user information in the global context and localStorage
       setUser(result.user)
       await makeSureUserIsInDatabase(result)
+      addToast({
+        type: 'success',
+        title: 'Sign in successful',
+        message: 'You have successfully signed in ✅'
+      })
       // Print the entire response
       console.log('Firebase Auth Response:', result)
       
@@ -110,6 +133,11 @@ function SignInContent() {
       router.push(redirect || '/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      addToast({
+        type: 'error',
+        title: 'Sign in failed',
+        message: errorMessage
+      })
       setError(errorMessage);
     } finally {
       setIsLoading(false)
@@ -126,9 +154,19 @@ function SignInContent() {
       // Store the user information in the global context 
       setUser(result.user)
       await makeSureUserIsInDatabase(result)
+      addToast({
+        type: 'success',
+        title: 'Sign in successful',
+        message: 'You have successfully signed in ✅'
+      })
       router.push(redirect || '/dashboard')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      addToast({
+        type: 'error',
+        title: 'Sign in failed',
+        message: errorMessage
+      })
       setError(errorMessage);
     } finally {
       setIsLoading(false)
@@ -211,8 +249,6 @@ function SignInContent() {
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SignInContent />
-    </Suspense>
+    <SignInContent />
   )
 }
