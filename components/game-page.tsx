@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import DOMPurify from 'dompurify';
+import { getImageUrl } from "@/lib/utils"
 
 // ... (in your component)
 const sanitizeHtml = (html: string) => {
@@ -114,7 +115,7 @@ export function GamePage({ gameId }: { gameId: string }) {
       </header>
 
       <Image
-        src={game.image || "/placeholder.png"}
+        src={getImageUrl(game.image)}
         alt="Game Cover"
         width={400}
         height={300}
@@ -137,7 +138,7 @@ export function GamePage({ gameId }: { gameId: string }) {
           {game.characters.map((character: Character, index: number) => (
             <div key={index} className="flex items-center space-x-2 mb-2">
               <Image
-                src={character.image || "/placeholder.png"}
+                src={getImageUrl(character.image)}
                 alt={character.name}
                 width={40}
                 height={40}

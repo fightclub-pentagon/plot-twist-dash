@@ -168,8 +168,8 @@ export function GameCreatorComponent() {
             </SelectTrigger>
             <SelectContent>
               {[...Array(17)].map((_, i) => (
-                <SelectItem key={i} value={(i + 4).toString()}>
-                  {i + 4}
+                <SelectItem key={i} value={(i + 5).toString()}>
+                  {i + 5}
                 </SelectItem>
               ))}
             </SelectContent>

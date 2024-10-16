@@ -7,6 +7,7 @@ import { Users } from "lucide-react"
 import { useUser } from '@/contexts/UserContext'
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation'
+import { getImageUrl } from "@/lib/utils"
 
 interface Game {
   game_id: number
@@ -59,6 +60,7 @@ export function MyGamesComponent() {
             throw new Error('Failed to fetch games');
           }
           const data = await response.json();
+          console.log('Data:', data);
           setGames(data.games || []);
           if (data.games.length > 0) {
             setFeaturedGame(data.games[0]);
@@ -83,6 +85,8 @@ export function MyGamesComponent() {
     setFeaturedGame(game)
   }
 
+  
+
   if (isLoading) {
     return <div className="text-white">Loading...</div>
   }
@@ -101,11 +105,12 @@ export function MyGamesComponent() {
             {/* Image Section */}
             <div className="relative h-full aspect-square mr-4 flex-shrink-0">
               <Image
-                src={featuredGame.image || '/placeholder.png'}
-                alt={featuredGame.title}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-md"
+                src={getImageUrl(featuredGame.image)}
+                alt={featuredGame.title || 'Featured game'}
+                width={200}
+                height={200}
+                className="rounded-md object-cover"
+                unoptimized
               />
               <div className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded-md flex items-center text-sm">
                 <Users className="w-4 h-4 mr-1" aria-hidden="true" />
@@ -144,7 +149,7 @@ export function MyGamesComponent() {
         >
           <div className="flex items-center space-x-4 p-2 bg-black rounded-lg h-24 overflow-hidden">
             <Image
-              src={game.image || '/placeholder.png'}
+              src={getImageUrl(game.image)}
               alt={game.title}
               width={50}
               height={50}

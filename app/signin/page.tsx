@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Icons } from "@/components/ui/icons"
@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useUser } from '@/contexts/UserContext'
 
-export default function SignInPage() {
+function SignInContent() {
   const { user, setUser } = useUser()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -41,6 +41,9 @@ export default function SignInPage() {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ email, username, signin_method })
       })
+      if (!response.ok) {
+        throw new Error('Failed to create user in database')
+      }
     } catch (error) {
       console.error('Error creating user in database:', error)
       throw error
@@ -52,7 +55,7 @@ export default function SignInPage() {
       throw new Error('User email is not available')
     }
     else if (!(await isUserExistentInDatabase())) {
-      let signin_method = result.user.providerData[0]?.providerId ?? ''
+      const signin_method = result.user.providerData[0]?.providerId ?? ''
       await createUserInDatabase(result.user.email, result.user.displayName ?? '', signin_method)
     }
   }
@@ -203,5 +206,13 @@ export default function SignInPage() {
         {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
     </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInContent />
+    </Suspense>
   )
 }

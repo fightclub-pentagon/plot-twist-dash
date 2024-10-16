@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from 'next/link'
 import { GameplayData } from '@/app/gameplay/[gameplayId]/page'
+import { getImageUrl } from '@/lib/utils'
 
 export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData }) {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
@@ -45,7 +46,7 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
       </header>
 
       <Image
-        src="/placeholder.png"
+        src={getImageUrl(gameplayData.game.image)}
         width={400}
         height={400}
         alt="Game Cover"
