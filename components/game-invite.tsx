@@ -35,6 +35,14 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
     }, 2000)
   }
 
+  const handleStartGameplay = () => {
+    console.log('Starting gameplay')
+  }
+
+  const handleCancelGameplay = () => {
+    console.log('Cancelling gameplay')
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 p-4 max-w-md mx-auto text-white">
       <header className="flex items-center mb-4">
@@ -109,7 +117,19 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
         </ul>
       </section>
 
-      <Button className="w-full bg-purple-700 hover:bg-purple-600">Start</Button>
+      <Button 
+        className="w-full bg-purple-700 hover:bg-purple-600"
+        onClick={handleStartGameplay}
+      >
+        Start
+      </Button>
+
+      <Button 
+        className="w-full bg-red-700 mt-4 hover:bg-red-600"
+        onClick={handleCancelGameplay}
+      >
+        Cancel
+      </Button>
 
       <Dialog open={isQRModalOpen} onOpenChange={setIsQRModalOpen}>
         <DialogContent className="sm:max-w-md bg-gray-800 text-white">

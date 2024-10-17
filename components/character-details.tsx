@@ -74,7 +74,7 @@ export function CharacterDetails(gameplay_data: GameplayData) {
         onToggle={() => toggleSection('rules')}
       >
         <p className="text-gray-300">
-          "TO BE ADDED TO GAMEPLAY COMPONENT"
+          {gameplay_data.game.rules.content}
         </p>
       </CollapsibleSection>
 

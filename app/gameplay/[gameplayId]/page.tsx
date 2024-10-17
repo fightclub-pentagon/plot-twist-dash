@@ -42,10 +42,12 @@ interface GameResponse {
 
 export interface GameplayData {
   id: number
+  uuid: string
   duration: number
   status: string
   game: GameResponse
   current_user: UserResponse
+  owner: string
   number_of_players: number
   users: UserResponse[]
   cards: RevelationCardResponse[]
