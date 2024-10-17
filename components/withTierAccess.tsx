@@ -53,7 +53,7 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
       }
 
       fetchUserTier();
-    }, [user, router]);
+    }, [user, router, addToast]);
 
     if (isLoading) {
       return <div>Loading...</div>;

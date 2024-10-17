@@ -9,8 +9,7 @@ import { auth } from '@/firebase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useUser } from '@/contexts/UserContext'
-import { useToast } from '@/components/toast'
-import { ToastProvider } from '@/components/toast'
+import { ToastProvider, useToast } from '@/components/toast'
 
 function SignInContent() {
   const { user, setUser } = useUser()
@@ -249,6 +248,10 @@ function SignInContent() {
 
 export default function SignInPage() {
   return (
-    <SignInContent />
+    <Suspense fallback={<div>Loading...</div>}>
+      <ToastProvider>
+        <SignInContent />
+      </ToastProvider>
+    </Suspense>
   )
 }

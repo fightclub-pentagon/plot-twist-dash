@@ -1,4 +1,4 @@
-type Game = {
+export type Game = {
     characters: Array<Character>;
     created_at: string;
     created_by: string;
@@ -14,7 +14,10 @@ type Game = {
     updated_at: string;
 };
 
-type Character = {
+export type Character = {
+  id: number;
   image: string;
   name: string;
+  backstory: string;
+  overview: string;
 };

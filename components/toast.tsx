@@ -46,15 +46,15 @@ const toastReducer = (state: ToastState, action: ToastAction): ToastState => {
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(toastReducer, { toasts: [] })
 
+  const removeToast = useCallback((id: string) => {
+    dispatch({ type: 'REMOVE_TOAST', payload: id })
+  }, [])
+
   const addToast = useCallback((toast: Omit<ToastProps, 'id'>) => {
     const id = Math.random().toString(36).substr(2, 9)
     dispatch({ type: 'ADD_TOAST', payload: { id, ...toast } })
     setTimeout(() => removeToast(id), 10000) // Auto remove after 10 seconds
-  }, [])
-
-  const removeToast = useCallback((id: string) => {
-    dispatch({ type: 'REMOVE_TOAST', payload: id })
-  }, [])
+  }, [removeToast]) // Add removeToast to the dependency array
 
   return (
     <ToastContext.Provider value={{ addToast, removeToast }}>
@@ -71,7 +71,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 }
 
 // Toast Component
-const Toast: React.FC<ToastProps & { onClose: () => void }> = ({ id, type, title, message, onClose }) => {
+const Toast: React.FC<Omit<ToastProps, 'id'> & { onClose: () => void }> = ({ type, title, message, onClose }) => {
   const bgColor = {
     error: 'bg-red-500',
     warning: 'bg-yellow-500',

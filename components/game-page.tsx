@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import DOMPurify from 'dompurify';
 import { getImageUrl } from "@/lib/utils"
+import { Game, Character } from '@/types'
 
 // ... (in your component)
 const sanitizeHtml = (html: string) => {
@@ -122,6 +123,13 @@ export function GamePage({ gameId }: { gameId: string }) {
         className="w-full rounded-lg object-cover"
       />
 
+      <Button 
+        className="w-full bg-purple-700 hover:bg-purple-600 text-white"
+        onClick={handleCreateGameplay}
+      >
+        Invite friends & PLAY
+      </Button>
+      
       <Card className="bg-gray-800 border-gray-700">
         <CardContent className="p-4">
           <p className="text-sm text-gray-300">

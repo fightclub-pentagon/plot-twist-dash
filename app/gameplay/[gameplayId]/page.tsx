@@ -6,6 +6,8 @@ import { InviteGameplay } from "@/components/game-invite"
 import io, { Socket } from 'socket.io-client'
 import { useUser } from '@/contexts/UserContext'
 import { GameplayInvitation } from '@/components/gameplay-invitation'
+import { useGameplay } from '@/contexts/GameplayContext'
+import { Character } from '@/types'
 
 interface RevelationCardResponse {
   id: number
@@ -47,7 +49,7 @@ export interface GameplayData {
   number_of_players: number
   users: UserResponse[]
   cards: RevelationCardResponse[]
-  character: Character | null
+  character: Character
 }
 
 // Create a custom hook for managing the socket connection
@@ -114,10 +116,10 @@ export default function Gameplay() {
   const { user } = useUser()
   const { gameplayId } = useParams()
   const [isLoading, setIsLoading] = useState(true)
-  const [gameplayData, setGameplayData] = useState<GameplayData | null>(null)
+  //const [gameplayData, setGameplayData] = useState<GameplayData | null>(null)
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   const { socket, isConnected } = useSocket(gameplayId as string)
-
+  const { gameplayData, setGameplayData} = useGameplay()
   useEffect(() => {
     let isMounted = true
     const joinGameplay = async () => {
@@ -179,7 +181,7 @@ export default function Gameplay() {
     return () => {
       isMounted = false
     }
-  }, [gameplayId, API_URL])
+  }, [gameplayId, API_URL, setGameplayData])
 
   useEffect(() => {
     if (!socket) return
@@ -200,7 +202,7 @@ export default function Gameplay() {
     return () => {
       socket.off('player_joined_gameplay', handlePlayerJoined)
     }
-  }, [socket])
+  }, [socket, setGameplayData])
 
   if (!user) {
     return <GameplayInvitation gameplayId={gameplayId as string} />

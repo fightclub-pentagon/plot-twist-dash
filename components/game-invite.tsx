@@ -16,7 +16,7 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
   const [, setIsCopied] = useState(false)
   const [copyButtonColor, setCopyButtonColor] = useState('bg-purple-700')
 
-  const { users, number_of_players } = gameplayData
+  const { users, number_of_players, character } = gameplayData
   const currentPageUrl = `localhost:3000/gameplay/${gameplayData.id}`
 
   const generateQRCode = (url: string): string => {
@@ -72,6 +72,23 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
             <span className="sr-only">Show QR Code</span>
           </Button>
         </div>
+      </section>
+
+      <section> 
+        <h2 className="text-lg font-semibold">Prepare your character</h2>
+        <ul className="space-y-2 mb-6">
+          {[character].map((character, index) => (
+            <Link href={`/character/${character?.id}`} key={index}>
+              <li className="bg-gray-800 p-2 mt-2 rounded-md flex items-center">
+              <Avatar className="h-8 w-8 mr-2">
+                <AvatarImage src={getImageUrl(character?.image || '')} alt={character?.name} />
+                <AvatarFallback>{character?.name[0]}</AvatarFallback>
+              </Avatar>
+                {character?.name}
+              </li>
+            </Link>
+          ))}
+        </ul>
       </section>
 
       <section>

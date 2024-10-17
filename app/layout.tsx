@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import '@/app/globals.css'
 import { UserProvider } from '@/contexts/UserContext'
 import { ToastProvider } from '@/components/toast'
+import { GameplayProvider } from '@/contexts/GameplayContext'
 
 export const metadata: Metadata = {
   title: 'Your Landing Page',
@@ -19,7 +20,9 @@ export default function RootLayout({
       <body>
         <ToastProvider>
           <UserProvider>
-            {children}
+            <GameplayProvider>
+              {children}
+            </GameplayProvider>
           </UserProvider>
         </ToastProvider>
       </body>
