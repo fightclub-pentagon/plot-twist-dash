@@ -10,14 +10,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from 'next/link'
 import { GameplayData } from '@/app/gameplay/[gameplayId]/page'
 import { getImageUrl } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+
 
 export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData }) {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [, setIsCopied] = useState(false)
   const [copyButtonColor, setCopyButtonColor] = useState('bg-purple-700')
-
+  const router = useRouter()
   const { users, number_of_players, character } = gameplayData
-  const currentPageUrl = `localhost:3000/gameplay/${gameplayData.id}`
+  const currentPageUrl = `localhost:3000/gameplay/${gameplayData.uuid}`
 
   const generateQRCode = (url: string): string => {
     const encodedUrl = encodeURIComponent(url)
@@ -36,7 +38,8 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
   }
 
   const handleStartGameplay = () => {
-    console.log('Starting gameplay')
+    console.log('Starting game')
+    router.push(`/gameplay/confirmation`)
   }
 
   const handleCancelGameplay = () => {

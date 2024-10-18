@@ -42,7 +42,7 @@ export function GamePage({ gameId }: { gameId: string }) {
       }
 
       const gameplayData = await gameplayResponse.json();
-      return gameplayData.id;
+      return gameplayData.uuid;
     } catch (error) {
       console.error('Error creating gameplay:', error);
       return null;

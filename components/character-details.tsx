@@ -31,7 +31,7 @@ export function CharacterDetails(gameplay_data: GameplayData) {
   return (
     <div className="min-h-screen bg-gray-900 p-4">
       <div className="mb-4 flex items-center">
-        <Link href={`/gameplay/${gameplay_data.id}`} className="mr-4 text-2xl text-gray-400 hover:text-gray-300">
+        <Link href={`/gameplay/${gameplay_data.uuid}`} className="mr-4 text-2xl text-gray-400 hover:text-gray-300">
           <ArrowLeft className="h-6 w-6" />
           <span className="sr-only">Go back</span>
         </Link>
