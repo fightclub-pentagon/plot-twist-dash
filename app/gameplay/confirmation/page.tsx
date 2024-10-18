@@ -16,17 +16,25 @@ export default function ConfirmationPage(/*{ params }: ConfirmationPageProps*/) 
   const router = useRouter()
   const { gameplayData } = useGameplay()
 
-    const onStartGame = (duration: number) => {
-      console.log(duration)
+  useEffect(() => {
+    console.log('duration', gameplayData?.duration)
+  }, [gameplayData])
+  const onStartGame = (duration: number) => {
+    // make request to mark the gameplay as started
+    if (!gameplayData) {
+      console.log(gameplayData)
+      return router.push('/')
     }
-    const onGoBack = () => {
-      if (!gameplayData) {
-        console.log(gameplayData)
-        return router.push('/')
-      }
-      router.push(`/gameplay/${gameplayData.uuid}`)
+    router.push(`/gameplay/${gameplayData.uuid}`)
+  }
+  const onGoBack = () => {
+    if (!gameplayData) {
+      console.log(gameplayData)
+      return router.push('/')
     }
-    return (
-        <GameConfirmationComponent onStartGame={onStartGame} onGoBack={onGoBack} />
-    )
+    router.push(`/gameplay/${gameplayData.uuid}`)
+  }
+  return (
+      <GameConfirmationComponent onStartGame={onStartGame} onGoBack={onGoBack} duration={gameplayData?.duration as number} />
+  )
 }

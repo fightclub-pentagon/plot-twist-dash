@@ -10,6 +10,7 @@ import { useGameplay } from '@/contexts/GameplayContext'
 import { Character } from '@/types'
 import { useToast } from '@/components/toast'
 import { useRouter } from 'next/router'
+import { GameProgress } from '@/components/game-progress'
 
 interface RevelationCardResponse {
   id: number
@@ -293,5 +294,10 @@ export default function Gameplay() {
     return <h1>Connecting to game server...</h1>
   }
 
-  return <InviteGameplay gameplayData={gameplayData} />
+  if (gameplayData.status==='CREATED') {
+    return <InviteGameplay gameplayData={gameplayData} />
+  } else if (gameplayData.status==='IN_PROGRESS') {
+    return <GameProgress />
+  }
+
 }
