@@ -51,6 +51,7 @@ export interface GameplayData {
   current_user: UserResponse
   owner: string
   number_of_players: number
+  //number of rounds
   users: UserResponse[]
   cards: RevelationCardResponse[]
   character: Character
