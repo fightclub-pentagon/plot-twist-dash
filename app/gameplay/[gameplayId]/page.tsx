@@ -84,6 +84,7 @@ function useSocket(gameplayId: string) {
     })
 
     newSocket.on('connect', () => {
+      console.log('Considering gameplayId:', gameplayId)
       console.log('Socket connected:', newSocket.id)
       setIsConnected(true)
       setConnectionError(null)
@@ -258,10 +259,17 @@ export default function Gameplay() {
       })
     }
 
+    const handleChangesInGameplay = (updatedGameplay: GameplayData) => {
+      console.log('Update in gameplay data:', updatedGameplay)
+      setGameplayData(updatedGameplay)
+    }
+
     socket.on('player_joined_gameplay', handlePlayerJoined)
+    socket.on('changes_in_gameplay_data', handleChangesInGameplay)
 
     return () => {
       socket.off('player_joined_gameplay', handlePlayerJoined)
+      socket.off('changes_in_gameplay_data', handleChangesInGameplay)
     }
   }, [socket, setGameplayData])
 
