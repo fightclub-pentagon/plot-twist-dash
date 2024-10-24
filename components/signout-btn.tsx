@@ -28,7 +28,10 @@ export function SignOutButton() {
     }
 
     return (
-        <Button onClick={signOut}>
+        <Button 
+            className="w-full bg-red-500 hover:bg-red-700 text-bold text-white"
+            onClick={signOut}
+        >
             Sign out
         </Button>
     );

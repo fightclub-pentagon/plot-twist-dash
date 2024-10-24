@@ -95,7 +95,7 @@ export function GameCreatorComponent() {
           checked={!gameData.isGuidedMode}
           onCheckedChange={(checked) => handleInputChange("isGuidedMode", !checked)}
         />
-        <Label htmlFor="guided-mode" className="text-sm text-white">Free Mode</Label>
+        <Label htmlFor="guided-mode" className="text-sm text-white">Creative Mode</Label>
       </div>
       
       {gameData.isGuidedMode ? (

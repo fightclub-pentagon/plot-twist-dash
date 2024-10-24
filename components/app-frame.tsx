@@ -5,16 +5,31 @@ import Link from "next/link"
 import { useUser } from '@/contexts/UserContext'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useToast } from "./toast"
 
 export function AppFrameComponent({ children }: { children: React.ReactNode }) {
   const { user } = useUser()
   const router = useRouter()
+  const { addToast } = useToast()
+
+  useEffect(() => {
+    const hasShownWarning = localStorage.getItem('mobileWarningShown')
+
+    if (window.outerWidth > 1000 && !hasShownWarning) {
+      addToast({
+        type: "warning",
+        title: "This app was designed for mobile devices",
+        message: "Please consider using a mobile device to use this app. You may experience some visual defects.",
+      })
+      localStorage.setItem('mobileWarningShown', 'true')
+    }
+  }, [addToast])
 
   useEffect(() => {
     if (!user) {
       router.push('/signin')
     }
-  }, [user, router])
+  }, [user, router,])
 
   if (!user) {
     return <div>Loading...</div>

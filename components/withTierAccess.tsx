@@ -17,8 +17,11 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
     const pathname = usePathname();
 
     useEffect(() => {
+      let isMounted = true;
+      let timeoutId: NodeJS.Timeout;
+
       async function fetchUserTier() {
-        if (user) {
+        if (user && isMounted) {
           try {
             const API_URL = process.env.NEXT_PUBLIC_API_URL;
             const token = localStorage.getItem('userToken');
@@ -27,32 +30,48 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
                 'Authorization': `Bearer ${token}`
               }
             });
-            if (response.ok) {
+            if (response.ok && isMounted) {
               const userData = await response.json();
               setUserTier(userData.tier);
-            } else {
-              addToast({
-                type: 'error',
-                title: 'Sorry we lost you... 😓',
-                message: 'Please go back to the home page and sign in again.'
-              })
+            } else if (isMounted) {
+              handleError('Sorry we lost you... 😓', 'Please go back to the home page and sign in again.');
             }
           } catch (error) {
             console.error('Error fetching user tier:', error);
-            addToast({
-              type: 'error',
-              title: 'Sorry we lost you... 😓',
-              message: 'Please go back to the home page and sign in again.'
-            })
+            if (isMounted) {
+              handleError('Sorry we lost you... 😓', 'Please go back to the home page and sign in again.');
+            }
           } finally {
-            setIsLoading(false);
+            if (isMounted) {
+              setIsLoading(false);
+            }
           }
-        } else {
+        } else if (isMounted) {
           router.push('/signin');
         }
       }
 
+      function handleError(title: string, message: string) {
+        addToast({
+          type: 'error',
+          title,
+          message
+        });
+        timeoutId = setTimeout(() => {
+          if (isMounted) {
+            router.push('/signin');
+          }
+        }, 2000);
+      }
+
       fetchUserTier();
+
+      return () => {
+        isMounted = false;
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+      };
     }, [user, router, addToast]);
 
     if (isLoading) {
@@ -72,7 +91,7 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
       );
     }
 
-    if (userTier === 'ADMIN' || userTier === 'PREMIUM' || pathname === '/dashboard/menu') {
+    if (userTier === 'ADMIN' || userTier === 'BASE' || userTier == 'PLUS' || userTier === 'PREMIUM' || pathname === '/dashboard/menu') {
       return <WrappedComponent {...props} />;
     }
 

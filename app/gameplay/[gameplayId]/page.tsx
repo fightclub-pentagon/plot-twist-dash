@@ -117,11 +117,11 @@ function useSocket(gameplayId: string) {
     if (reconnectAttemptsRef.current < maxReconnectAttempts) {
       reconnectAttemptsRef.current += 1
       console.log(`Attempting to reconnect (${reconnectAttemptsRef.current}/${maxReconnectAttempts})...`)
-      addToast({
+      /*addToast({
         type: 'info',
         title: 'Reconnecting',
         message: `Attempting to reconnect (${reconnectAttemptsRef.current}/${maxReconnectAttempts})...`
-      })
+      })*/
       setTimeout(connectSocket, reconnectDelay)
     } else {
       console.error('Max reconnection attempts reached')
@@ -181,11 +181,11 @@ export default function Gameplay() {
           const errorData = await joinResponse.json()
           if (joinResponse.status === 400 && errorData.error_code === 'ALREADY_JOINED') {
             console.log('User already joined, proceeding to fetch gameplay data')
-            addToast({
+            /*addToast({
               type: 'info',
               title: 'You are in! 👍',
               message: ''
-            })
+            })*/
             
           } else {
             console.error('Failed to join gameplay')
@@ -221,11 +221,11 @@ export default function Gameplay() {
         console.log('Gameplay data fetched:', data)
         setGameplayData(data)
         setIsLoading(false)
-        addToast({
+        /*addToast({
           type: 'success',
           title: 'Welcome to the game!',
           message: 'Wait until it everybody joins to start'
-        })
+        })*/
       } catch (error) {
         console.error('Error:', error)
         addToast({
