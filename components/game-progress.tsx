@@ -24,23 +24,47 @@ export function GameProgress() {
   }
 
   useEffect(() => {
-    if (gameplayData?.cards) {
-      const curr_cards_ids = discoveryCards.map((c) => c.id)
-      const newCards: DiscoveryCard[] = gameplayData.cards
-        .filter((card) => !curr_cards_ids.includes(card.id))
-        .map((card) => ({ id: card.id, index: card.order_number, title: card.title, clicked: false } as DiscoveryCard))
-      const updatedCards = [...discoveryCards, ...newCards]
-      setDiscoveryCards(orderCards(updatedCards).reverse())
-
+    if (gameplayData?.uuid) {
+      const storedCards = localStorage.getItem(`discoveryCards_${gameplayData.uuid}`)
+      
+      if (storedCards) {
+        // If we have stored cards, use them
+        setDiscoveryCards(JSON.parse(storedCards))
+      }
+      
+      if (gameplayData?.cards) {
+        const curr_cards_ids = storedCards ? 
+                                JSON.parse(storedCards).map((c: DiscoveryCard) => c.id) : 
+                                discoveryCards.map((c: DiscoveryCard) => c.id)
+        console.log('curr_cards_ids', curr_cards_ids)
+        const newCards: DiscoveryCard[] = gameplayData.cards
+          .filter((card) => !curr_cards_ids.includes(card.id))
+          .map((card) => ({ 
+            id: card.id, 
+            index: card.order_number, 
+            title: card.title, 
+            clicked: false 
+          } as DiscoveryCard))
+        console.log('newCards', newCards)
+        const existingCards = storedCards ? JSON.parse(storedCards) : discoveryCards;
+        const orderedCards = orderCards([...existingCards, ...newCards]).reverse();
+        console.log('orderedCards', orderedCards);
+        setDiscoveryCards(orderedCards);
+        localStorage.setItem(`discoveryCards_${gameplayData.uuid}`, JSON.stringify(orderedCards))
+      }
     }
-  }, [gameplayData?.cards])
+  }, [gameplayData?.uuid, gameplayData?.cards]) // Only run this effect when the UUID changes
 
   const handleCardClick = (id: number) => {
-    setDiscoveryCards(cards =>
-      cards.map(card =>
+    setDiscoveryCards(cards => {
+      const updatedCards = cards.map(card =>
         card.id === id ? { ...card, clicked: true } : card
       )
-    )
+      if (gameplayData?.uuid) {
+        localStorage.setItem(`discoveryCards_${gameplayData.uuid}`, JSON.stringify(updatedCards))
+      }
+      return updatedCards
+    })
     // setProgress(prev => Math.min(prev + 14, 100))
   }
 
