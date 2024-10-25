@@ -9,7 +9,7 @@ export function GameConfirmationComponent({ onStartGame, onGoBack }: { onStartGa
       <Card className="w-full max-w-md space-y-6 p-6 bg-gray-200 border-transparent">
         <h1 className="text-2xl font-bold text-center">Ready to Start?</h1>
         <p className="text-center text-muted-foreground">
-          You're about to start the game. Once you confirm, you can't go back. Make sure all players are ready!
+          You&apos;re about to start the game. Once you confirm, you can&apos;t go back. Make sure all players are ready!
         </p>
         <div className="space-y-4">
           <Button 

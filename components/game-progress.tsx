@@ -1,16 +1,15 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react"
 import { Progress } from "@/components/ui/progress"
 import { useGameplay } from "@/contexts/GameplayContext"
-import Image from "next/image"
 import { getImageUrl } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import Link from "next/link"
 
 interface DiscoveryCard {
   id: number
+  index: number
   title: string
   clicked: boolean
 }
@@ -18,17 +17,23 @@ interface DiscoveryCard {
 export function GameProgress() {
   const [progress, setProgress] = useState(30)
   const { gameplayData } = useGameplay()
-  const [discoveryCards, setDiscoveryCards] = useState<DiscoveryCard[]>([
-    { id: 5, title: "Ancient Relic", clicked: false },
-    { id: 4, title: "Hidden Cave", clicked: false },
-    { id: 3, title: "Mysterious Artifact", clicked: false },
-    { id: 2, title: "Secret Passage", clicked: false },
-    { id: 1, title: "Treasure Map", clicked: false },
-  ])
+  const [discoveryCards, setDiscoveryCards] = useState<DiscoveryCard[]>([])
 
-  const handleCharacterClick = () => {
-
+  const orderCards = (cards: DiscoveryCard[]) => {
+    return cards.sort((a, b) => a.index - b.index)
   }
+
+  useEffect(() => {
+    if (gameplayData?.cards) {
+      const curr_cards_ids = discoveryCards.map((c) => c.id)
+      const newCards: DiscoveryCard[] = gameplayData.cards
+        .filter((card) => !curr_cards_ids.includes(card.id))
+        .map((card) => ({ id: card.id, index: card.order_number, title: card.title, clicked: false } as DiscoveryCard))
+      const updatedCards = [...discoveryCards, ...newCards]
+      setDiscoveryCards(orderCards(updatedCards).reverse())
+
+    }
+  }, [gameplayData?.cards])
 
   const handleCardClick = (id: number) => {
     setDiscoveryCards(cards =>
@@ -36,7 +41,7 @@ export function GameProgress() {
         card.id === id ? { ...card, clicked: true } : card
       )
     )
-    setProgress(prev => Math.min(prev + 14, 100))
+    // setProgress(prev => Math.min(prev + 14, 100))
   }
 
   return (
@@ -74,7 +79,7 @@ export function GameProgress() {
                     : "bg-purple-800 text-white shadow-lg"
                 }`}
               >
-                <span className={`font-bold mr-2 ${card.clicked ? "" : "animate-pulse"}`}>{card.id}.</span>
+                <span className={`font-bold mr-2 ${card.clicked ? "" : "animate-pulse"}`}>{card.index}.</span>
                 <span className={card.clicked ? "" : "animate-pulse"}>{card.title}</span>
               </button>
             </li>

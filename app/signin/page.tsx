@@ -16,7 +16,7 @@ function SignInContent() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [, setError] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
   const { addToast } = useToast()

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { CharacterDetails } from '@/components/character-details'
 import { useGameplay } from '@/contexts/GameplayContext'
 import { GameConfirmationComponent } from '@/components/game-confirmation'
 /*

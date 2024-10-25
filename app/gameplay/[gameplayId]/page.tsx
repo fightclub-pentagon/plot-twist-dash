@@ -9,7 +9,6 @@ import { GameplayInvitation } from '@/components/gameplay-invitation'
 import { useGameplay } from '@/contexts/GameplayContext'
 import { Character } from '@/types'
 import { useToast } from '@/components/toast'
-import { useRouter } from 'next/router'
 import { GameProgress } from '@/components/game-progress'
 
 interface RevelationCardResponse {
@@ -68,22 +67,23 @@ function useSocket(gameplayId: string) {
   const reconnectDelay = 1000 // 1 second
   const { addToast } = useToast()
 
+  
   const connectSocket = useCallback(() => {
     console.log('Attempting to connect socket...')
     if (socketRef.current?.connected) {
       console.log('Socket already connected')
       return
     }
-
+    
     const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://127.0.0.1:5001'
-
+    
     const newSocket = io(SOCKET_URL, {
       transports: ['websocket'],
       upgrade: false,
       reconnection: false, // We'll handle reconnection manually
       timeout: 10000,
     })
-
+    
     newSocket.on('connect', () => {
       console.log('Considering gameplayId:', gameplayId)
       console.log('Socket connected:', newSocket.id)
@@ -92,24 +92,24 @@ function useSocket(gameplayId: string) {
       reconnectAttemptsRef.current = 0
       newSocket.emit('join', { room: gameplayId })
     })
-
+    
     newSocket.on('disconnect', (reason) => {
       console.log('Socket disconnected:', reason)
       setIsConnected(false)
       handleReconnect()
     })
-
+    
     newSocket.on('connect_error', (error) => {
       console.error('Connection error:', error.message)
       setConnectionError(error.message)
       handleReconnect()
     })
-
+    
     newSocket.on('error', (error) => {
       console.error('Socket error:', error)
       setConnectionError(error.message)
     })
-
+    
     socketRef.current = newSocket
   }, [gameplayId])
 
@@ -133,10 +133,11 @@ function useSocket(gameplayId: string) {
       })
     }
   }, [connectSocket, addToast])
-
+  
+  
   useEffect(() => {
     connectSocket()
-
+    
     return () => {
       console.log('Cleaning up socket connection')
       if (socketRef.current) {
@@ -189,11 +190,13 @@ export default function Gameplay() {
             
           } else {
             console.error('Failed to join gameplay')
-            addToast({
-              type: 'error',
-              title: 'Sorry, we could not put you in the game!',
-              message: ''
-            })
+            if (isMounted) {
+              addToast({
+                type: 'error',
+                title: 'Sorry, we could not put you in the game!',
+                message: ''
+              })
+            }
             throw new Error(`Failed to join gameplay: ${errorData.message || joinResponse.statusText}`)
           }
         }
@@ -209,23 +212,22 @@ export default function Gameplay() {
         if (!dataResponse.ok) {
           console.error('Failed to fetch gameplay data')
 
-          addToast({
-            type: 'error',
-            title: 'Sorry, an error occured while loading your game 😵‍💫',
-            message: 'Wait until it everybody joins to start'
-          })
+          if (isMounted) {
+            addToast({
+              type: 'error',
+              title: 'Sorry, an error occured while loading your game 😵‍💫',
+              message: 'Wait until it everybody joins to start'
+            })
+          }
           throw new Error('Failed to fetch gameplay data')
         }
 
         const data: GameplayData = await dataResponse.json()
         console.log('Gameplay data fetched:', data)
-        setGameplayData(data)
-        setIsLoading(false)
-        /*addToast({
-          type: 'success',
-          title: 'Welcome to the game!',
-          message: 'Wait until it everybody joins to start'
-        })*/
+        if (isMounted) {
+          setGameplayData(data)
+          setIsLoading(false)
+        }
       } catch (error) {
         console.error('Error:', error)
         addToast({
@@ -244,7 +246,7 @@ export default function Gameplay() {
     return () => {
       isMounted = false
     }
-  }, [gameplayId, API_URL, setGameplayData])
+  }, [gameplayId, API_URL, setGameplayData, addToast])
 
   useEffect(() => {
     if (!socket) return

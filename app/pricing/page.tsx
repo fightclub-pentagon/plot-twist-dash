@@ -1,8 +1,6 @@
 'use client'
 
 import { PricingTableComponent } from '@/components/pricing-table';
-import { StripePricingTable } from '@/components/StripePricingTable';
-import { useUser } from '@/contexts/UserContext';
 
 //pricingTableId="prctbl_1QBftrCfSvaJZHjJsKc9bUZR"
 //publishableKey="pk_live_51N3jbdCfSvaJZHjJLmXHUhhKdmQi2WURgMAiWKvjlGtmXNPAes6bhm0LRB5ddXlrrgd21ns446DdEWjRtZ2ETS5z00pFDkLrAS"
@@ -12,7 +10,6 @@ import { useUser } from '@/contexts/UserContext';
           clientReferenceId={user?.uid}
         /> */
 export default function PricingPage() {
-  const { user } = useUser();
 
   return (
     <div className="bg-gray-900 min-h-screen">
