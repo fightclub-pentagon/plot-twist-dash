@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import DOMPurify from 'dompurify';
 import { getImageUrl } from "@/lib/utils"
 import { Game, Character } from '@/types'
+import { useToast } from "./toast"
 
 // ... (in your component)
 const sanitizeHtml = (html: string) => {
@@ -21,6 +22,7 @@ export function GamePage({ gameId }: { gameId: string }) {
   const [game, setGame] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
   const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -45,13 +47,22 @@ export function GamePage({ gameId }: { gameId: string }) {
       return gameplayData.uuid;
     } catch (error) {
       console.error('Error creating gameplay:', error);
-      return null;
+      throw error;
     }
   };
 
   const handleCreateGameplay = async () => {
-    const gameplayId: string | null = await createGameplay(gameId);
-    router.push(`/gameplay/${gameplayId}`);
+    try {
+      const gameplayId: string | null = await createGameplay(gameId);
+      router.push(`/gameplay/${gameplayId}`);
+    } catch (error) {
+      console.error('Error creating gameplay:', error);
+      addToast({
+        type: 'error',
+        title: 'Error creating gameplay',
+        message: 'Failed to create gameplay. Please try again later.'
+      });
+    }
   };
 
   useEffect(() => {

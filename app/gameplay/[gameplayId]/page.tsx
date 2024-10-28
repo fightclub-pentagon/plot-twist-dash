@@ -42,6 +42,17 @@ interface GameResponse {
   n_rounds: number
 }
 
+interface Votes {
+  [key: number]: number
+}
+
+export interface PublicCharacterResponse {
+  id: number
+  name: string
+  image: string
+}
+
+
 export interface GameplayData {
   id: number
   uuid: string
@@ -51,10 +62,12 @@ export interface GameplayData {
   current_user: UserResponse
   owner: string
   number_of_players: number
-  //number of rounds
+  number_of_cards: number
   users: UserResponse[]
   cards: RevelationCardResponse[]
   character: Character
+  characters: PublicCharacterResponse[]
+  votes: Votes
 }
 
 // Create a custom hook for managing the socket connection

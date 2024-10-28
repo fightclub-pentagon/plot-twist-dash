@@ -6,22 +6,35 @@ import { useGameplay } from "@/contexts/GameplayContext"
 import { getImageUrl } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import Link from "next/link"
+import { RevelationCardViewer } from "./revelation-card-viewer"
+import { Voting } from "./voting"
 
 interface DiscoveryCard {
   id: number
   index: number
   title: string
+  image: string
+  text: string
   clicked: boolean
 }
 
 export function GameProgress() {
-  const [progress, setProgress] = useState(30)
+  const [progress, setProgress] = useState(0)
   const { gameplayData } = useGameplay()
   const [discoveryCards, setDiscoveryCards] = useState<DiscoveryCard[]>([])
+  const [ selectedCard, setSelectedCard ] = useState<DiscoveryCard | null>(null)
 
   const orderCards = (cards: DiscoveryCard[]) => {
     return cards.sort((a, b) => a.index - b.index)
   }
+
+  useEffect(() => {
+    const percentage = Math.round((discoveryCards.length / (gameplayData?.number_of_cards || 1)) * 100)
+    console.log('discoveryCards.length', discoveryCards.length)
+    console.log('gameplayData?.number_of_cards', gameplayData?.number_of_cards)
+    console.log('percentage', percentage)
+    setProgress(percentage)
+  }, [discoveryCards])
 
   useEffect(() => {
     if (gameplayData?.uuid) {
@@ -43,6 +56,8 @@ export function GameProgress() {
             id: card.id, 
             index: card.order_number, 
             title: card.title, 
+            image: card.image,
+            text: card.text,
             clicked: false 
           } as DiscoveryCard))
         console.log('newCards', newCards)
@@ -55,7 +70,8 @@ export function GameProgress() {
     }
   }, [gameplayData?.uuid, gameplayData?.cards]) // Only run this effect when the UUID changes
 
-  const handleCardClick = (id: number) => {
+  const handleCardClickOrOpened = (id: number | null) => {
+    if (!id) return
     setDiscoveryCards(cards => {
       const updatedCards = cards.map(card =>
         card.id === id ? { ...card, clicked: true } : card
@@ -65,15 +81,20 @@ export function GameProgress() {
       }
       return updatedCards
     })
+    setSelectedCard(discoveryCards.find(card => card.id === id) || null)
     // setProgress(prev => Math.min(prev + 14, 100))
   }
 
   return (
     <div className="min-h-screen bg-gray-900 p-4">
-      <h1 className="text-2xl font-bold text-white text-center mb-4">Adventure Quest</h1>
-      <Progress value={progress} className="mb-6 bg-gray-700" />
-      
-      <section> 
+      {!selectedCard ? 
+        <>
+          <h1 className="text-2xl font-bold text-white text-center mb-4">Adventure Quest</h1>
+          <Progress value={progress} className="mb-6 bg-gray-700" />
+
+          
+          
+          <section> 
         <h2 className="text-lg text-gray-300 font-semibold">Revisit Your Character</h2>
         <ul className="space-y-2 mb-6">
           {[gameplayData?.character].map((character, index) => (
@@ -83,7 +104,7 @@ export function GameProgress() {
                 <AvatarImage src={getImageUrl(character?.image || '')} alt={character?.name} />
                 <AvatarFallback>{character?.name[0]}</AvatarFallback>
               </Avatar>
-                {character?.name}
+              <span className="text-gray-300">{character?.name}</span>
               </li>
             </Link>
           ))}
@@ -96,20 +117,52 @@ export function GameProgress() {
           {discoveryCards.map((card) => (
             <li key={card.id}>
               <button
-                onClick={() => handleCardClick(card.id)}
+                onClick={() => handleCardClickOrOpened(card.id)}
                 className={`w-full text-left p-3 rounded-lg transition-all duration-300 ${
                   card.clicked
-                    ? "bg-gray-400"
-                    : "bg-purple-800 text-white shadow-lg"
-                }`}
-              >
+                  ? "bg-gray-800 text-gray-300"
+                  : "bg-purple-800 text-white shadow-lg"
+                  }`}
+                  >
                 <span className={`font-bold mr-2 ${card.clicked ? "" : "animate-pulse"}`}>{card.index}.</span>
                 <span className={card.clicked ? "" : "animate-pulse"}>{card.title}</span>
               </button>
             </li>
           ))}
         </ul>
-      </section>
+          </section>
+          {progress <= 100 ?
+            <>
+              <section>
+              <h2 className="text-lg text-gray-300 font-semibold">Voting Poll</h2>
+                <Voting />
+              </section>
+            </>
+          :
+            <>
+            </>
+          }
+        
+        </>
+
+        :
+        <>
+          <RevelationCardViewer
+            cardName={selectedCard?.title || ''}
+            cardImage={getImageUrl(selectedCard?.image || '')}
+            cardText={selectedCard?.text || ''}
+            currentIndex={selectedCard?.index - 1 || 0}
+            totalCards={discoveryCards.length}
+            onPrevious={() => {
+              handleCardClickOrOpened(discoveryCards.find((card) => card.index === selectedCard?.index - 1)?.id || null)
+            }}
+            onNext={() => {
+              handleCardClickOrOpened(discoveryCards.find((card) => card.index === selectedCard?.index + 1)?.id || null)
+            }}
+            onBack={() => setSelectedCard(null)}
+          />
+        </>
+      }
     </div>
   )
 }

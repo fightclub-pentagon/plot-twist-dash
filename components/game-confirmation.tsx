@@ -16,7 +16,7 @@ interface GameConfirmationComponentProps {
 
 const generateDurationOptions = () => {
   const options = []
-  for (let i = 5; i <= 500; i += 15) {
+  for (let i = 15; i <= 500; i += 15) {
     options.push(i)
   }
   return options

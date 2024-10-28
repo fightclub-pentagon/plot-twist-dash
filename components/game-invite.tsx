@@ -86,7 +86,7 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
       </section>
 
       <section> 
-        <h2 className="text-lg font-semibold">Prepare your character</h2>
+        <h2 className="text-lg text-gray-300 font-semibold">Prepare your character</h2>
         <ul className="space-y-2 mb-6">
           {[character].map((character, index) => (
             <Link href={`/character/${character?.id}`} key={index}>
