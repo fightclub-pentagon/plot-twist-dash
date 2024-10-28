@@ -24,8 +24,9 @@ function SignInContent() {
 
   const isUserExistentInDatabase = async () => {
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const token = await auth.currentUser?.getIdToken()
-      const response = await fetch(`http://localhost:5001/user/${user?.uid}`, {
+      const response = await fetch(`${API_URL}/user/${user?.uid}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       return response.ok
