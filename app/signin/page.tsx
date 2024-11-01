@@ -38,8 +38,9 @@ function SignInContent() {
 
   const createUserInDatabase = async (email: string, username: string, signin_method: string) => {
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const token = await auth.currentUser?.getIdToken()
-      const response = await fetch('http://localhost:5001/user', {
+      const response = await fetch(`${API_URL}/user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ email, username, signin_method })
