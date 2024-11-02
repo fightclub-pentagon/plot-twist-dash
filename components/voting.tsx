@@ -7,11 +7,14 @@ import { useGameplay } from '@/contexts/GameplayContext'
 import { PublicCharacterResponse } from '@/app/gameplay/[gameplayId]/page'
 import { getImageUrl } from '@/lib/utils'
 
-export function Voting() {
+export function Voting({ progress }: { progress: number }) {
   const [selectedCharacter, setSelectedCharacter] = useState<number | null>(null)
   const [accused, setAccused] = useState<PublicCharacterResponse | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const { gameplayData } = useGameplay()
+  const isEnded = progress >= 100
+  console.log(`progress: ${progress}`)
+  console.log(`isEnded: ${isEnded}`)
 
 
   const handleAccuse = async () => {
@@ -70,21 +73,21 @@ export function Voting() {
   return (
     <div className="max-w-md mt-6 mx-auto p-4 bg-gray-800 rounded-lg">
       
-      {!accused || isEditing ? (
+      {isEditing ? (
         <>
           <p className="text-center text-gray-300 mb-6">
-            {isEditing 
-              ? "Edit your accusation. Choose a different character if you wish."
-              : "The game has reached the end, a voting needs to take place to vote for who is the killer. Choose wisely."}
+            {isEnded 
+              ? "This is the final chance to accuse the killer. Choose wisely."
+              : "Accuse your suspect. You can always revise your choice."}
           </p>
-          <ul className="space-y-4 mb-6">
+          <ul className="space-y-4 mb-6 text-white">
             {gameplayData?.characters.map(character => (
               <li 
                 key={character.id}
                 className={`flex items-center space-x-4 p-2 rounded-lg transition-all duration-200 ${
                   selectedCharacter === character.id 
                     ? 'bg-purple-600 scale-105' 
-                    : 'bg-gray-700 hover:bg-gray-50'
+                    : 'bg-gray-700 hover:bg-gray-50 hover:text-purple-600'
                 }`}
               >
                 <input
@@ -118,12 +121,16 @@ export function Voting() {
             className="w-full"
             variant="destructive"
           >
-            {isEditing ? 'Confirm Accusation' : 'Accuse 🫵'}
+            {isEnded ? 'Accuse 🫵 (Final)' : 'Accuse 🫵'}
           </Button>
         </>
       ) : (
+        
         <>
-          <p className="text-center text-gray-300 mb-4">You accused {accused.name}</p>
+          <p className="text-center text-gray-300 mb-4">
+            {accused ? `You accused ${accused.name}` : isEnded ? "All clues have been revealed. All players must vote on the killer." : "You haven't accused a suspect yet."}
+          </p>
+          {accused && (
           <div className="flex justify-center mb-6">
             <Image
               src={getImageUrl(accused.image)}
@@ -131,15 +138,39 @@ export function Voting() {
               width={100}
               height={100}
               className="rounded-full"
-            />
-          </div>
+              />
+            </div>
+          )}
+          {(!isEnded || !accused) && (
           <Button
             onClick={handleEditAccusation}
             className="w-full mb-6"
             variant="outline"
           >
-            Edit Accusation
-          </Button>
+              {!accused ? "Accuse" : "Change Accusation"}
+            </Button>
+          )}
+          {isEnded && accused && (
+            <>
+            <p className="text-center text-gray-300 mb-4">
+              Are you sure?
+            </p>
+            <Button
+              onClick={() => {}}
+              className="w-full mb-6"
+              variant="outline"
+            >
+              Yes! Confirm accusation
+            </Button>
+            <Button
+              onClick={handleEditAccusation}
+              className="w-full mb-6"
+              variant="destructive"
+            >
+              Change Accusation
+            </Button>
+            </>
+          )}
           <h2 className="text-lg text-gray-300 font-semibold mb-4">Real-time Voting Results</h2>
           <ul className="space-y-4">
             {gameplayData?.characters.map(character => (

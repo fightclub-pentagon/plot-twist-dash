@@ -50,9 +50,9 @@ export function RevelationCardViewer({
   const dots = generateDots(currentIndex, totalCards)
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-gray-900 text-foreground">
       {/* Header */}
-      <header className="flex items-center p-4 border-b">
+      <header className="flex items-center p-4 border-b text-white">
         <Link href="#" className="mr-4" onClick={onBack}>
           <ArrowLeft className="h-6 w-6" />
           <span className="sr-only">Go back</span>
@@ -61,7 +61,7 @@ export function RevelationCardViewer({
       </header>
 
       {/* Main content */}
-      <main className="flex-grow flex flex-col items-center justify-between p-4">
+      <main className="flex-grow flex flex-col items-center justify-between p-4 text-white">
         <div className="w-full max-w-md">
           <div className="relative aspect-[2/3] w-full mb-4">
             {!imageLoaded && (
@@ -87,7 +87,7 @@ export function RevelationCardViewer({
       </main>
 
       {/* Navigation */}
-      <nav className="flex items-center justify-between p-4 border-t">
+      <nav className="flex items-center justify-between p-4 border-t text-white">
         <button 
           onClick={onPrevious} 
           className="p-2" 

@@ -135,7 +135,7 @@ export function GameProgress() {
             <>
               <section>
               <h2 className="text-lg text-gray-300 font-semibold">Voting Poll</h2>
-                <Voting />
+                <Voting progress={progress}/>
               </section>
             </>
           :

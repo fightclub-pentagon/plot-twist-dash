@@ -8,9 +8,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 const getImageUrl = (imagePath: string | null) => {
-  console.log('API_URL:', API_URL);
-  console.log('imagePath:', imagePath);
-  
   if (!imagePath || !API_URL) return '/placeholder.png';
   // Remove leading slash if present
   const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
