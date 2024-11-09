@@ -6,19 +6,22 @@ import { Button } from "@/components/ui/button"
 import { useGameplay } from '@/contexts/GameplayContext'
 import { PublicCharacterResponse } from '@/app/gameplay/[gameplayId]/page'
 import { getImageUrl } from '@/lib/utils'
+import { useToast } from './toast'
 
 export function Voting({ progress }: { progress: number }) {
-  const [selectedCharacter, setSelectedCharacter] = useState<number | null>(null)
   const [accused, setAccused] = useState<PublicCharacterResponse | null>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const { gameplayData } = useGameplay()
+  const { gameplayData, setGameplayData } = useGameplay()
+  const { addToast } = useToast()
   const isEnded = progress >= 100
+  
   console.log(`progress: ${progress}`)
   console.log(`isEnded: ${isEnded}`)
 
 
   const handleAccuse = async () => {
-    if (selectedCharacter !== null) {
+    console.log('handleAccuse\n\ngameplayData: ', gameplayData)
+    if (gameplayData?.selected_character !== null) {
       const user_token = localStorage.getItem('userToken');
       if (!user_token) {
         console.error('No user token found');
@@ -42,7 +45,10 @@ export function Voting({ progress }: { progress: number }) {
       try {
         const response = await fetch(url, {
           method: 'POST',
-          body: JSON.stringify({ character_id: selectedCharacter }),
+          body: JSON.stringify({ 
+            character_id: gameplayData?.selected_character,
+            is_final: isEnded
+          }),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${user_token}`
@@ -50,16 +56,48 @@ export function Voting({ progress }: { progress: number }) {
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorData = await response.json();
+          
+          if (response.status === 500 && errorData.error_code === 'VOTE_TIE') {
+            console.log('VOTE_TIE: setting is_voting_tied to true and is_final_vote to false')
+            setGameplayData((prevData) => {
+              if (!prevData) return prevData
+              return {
+                ...prevData,
+                is_voting_tied: true,
+                is_final_vote: false,
+              }
+            });
+            setIsEditing(true); // Allow revoting
+            return;
+          }
+          else {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
         }
 
         const data = await response.json();
         console.log('Vote response:', data);
 
-        setAccused(gameplayData?.characters.find(char => char.id === selectedCharacter) || null);
+        setAccused(gameplayData?.characters.find(char => char.id === gameplayData?.selected_character) || null);
         setIsEditing(false);
+
+        if (isEnded) {
+          setGameplayData((prevData) => {
+            if (!prevData) return prevData
+            return {
+              ...prevData,
+              is_final_vote: true,
+            }
+          });
+        }
       } catch (error) {
         console.error('Error voting:', error);
+        addToast({
+          type: 'error',
+          title: 'Error submitting vote',
+          message: 'Something went wrong. Please try again.'
+        });
       }
     }
   };
@@ -85,7 +123,7 @@ export function Voting({ progress }: { progress: number }) {
               <li 
                 key={character.id}
                 className={`flex items-center space-x-4 p-2 rounded-lg transition-all duration-200 ${
-                  selectedCharacter === character.id 
+                  gameplayData?.selected_character === character.id 
                     ? 'bg-purple-600 scale-105' 
                     : 'bg-gray-700 hover:bg-gray-50 hover:text-purple-600'
                 }`}
@@ -95,8 +133,17 @@ export function Voting({ progress }: { progress: number }) {
                   id={`character-${character.id}`}
                   name="character"
                   value={character.id}
-                  checked={selectedCharacter === character.id}
-                  onChange={() => setSelectedCharacter(character.id)}
+                  checked={gameplayData?.selected_character === character.id}
+                  onChange={() => 
+                    setGameplayData((prevData) => {
+                      console.log('Character ID:', character.id)
+                      if (!prevData) return prevData
+                      return {
+                        ...prevData,
+                        selected_character: character.id
+                      }
+                    })
+                  }
                   className="sr-only"
                 />
                 <label 
@@ -117,7 +164,7 @@ export function Voting({ progress }: { progress: number }) {
           </ul>
           <Button
             onClick={handleAccuse}
-            disabled={selectedCharacter === null}
+            disabled={gameplayData?.selected_character === null}
             className="w-full"
             variant="destructive"
           >
@@ -135,9 +182,9 @@ export function Voting({ progress }: { progress: number }) {
             <Image
               src={getImageUrl(accused.image)}
               alt={accused.name}
-              width={100}
-              height={100}
-              className="rounded-full"
+              width={60}  // Request a larger image
+              height={60} // Keep aspect ratio 1:1
+              className="rounded-full w-[150px] h-[150px]"
               />
             </div>
           )}
