@@ -20,4 +20,5 @@ export type Character = {
   name: string;
   backstory: string;
   overview: string;
+  is_killer: boolean;
 };

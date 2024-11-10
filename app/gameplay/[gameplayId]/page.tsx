@@ -10,6 +10,7 @@ import { useGameplay } from '@/contexts/GameplayContext'
 import { Character } from '@/types'
 import { useToast } from '@/components/toast'
 import { GameProgress } from '@/components/game-progress'
+import { GameOver } from '@/components/game-over'
 
 interface RevelationCardResponse {
   id: number
@@ -65,9 +66,14 @@ export interface GameplayData {
   number_of_cards: number
   users: UserResponse[]
   cards: RevelationCardResponse[]
-  character: Character
+  character: Character | null
   characters: PublicCharacterResponse[]
+  selected_character: number | null
   votes: Votes
+  is_voting_tied: boolean | null
+  is_final_vote: boolean | null
+  killer: Character | null
+  conclusion: string | null
 }
 
 // Create a custom hook for managing the socket connection
@@ -167,12 +173,10 @@ export default function Gameplay() {
   const { gameplayId } = useParams()
   const { addToast } = useToast()
   const [isLoading, setIsLoading] = useState(true)
-  //const [gameplayData, setGameplayData] = useState<GameplayData | null>(null)
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   const { socket, isConnected, connectionError } = useSocket(gameplayId as string)
-  const { gameplayData, setGameplayData} = useGameplay()
-  //const router = useRouter()
-
+  const { gameplayData, setGameplayData } = useGameplay()
+ 
   useEffect(() => {
     let isMounted = true
     const joinGameplay = async () => {
@@ -277,7 +281,30 @@ export default function Gameplay() {
 
     const handleChangesInGameplay = (updatedGameplay: GameplayData) => {
       console.log('Update in gameplay data:', updatedGameplay)
-      setGameplayData(updatedGameplay)
+      if (updatedGameplay.is_voting_tied) {
+        setGameplayData((prevData) => {
+          if (!prevData) return prevData
+          return {
+            ...prevData,
+            is_voting_tied: true,
+            is_final_vote: false
+          }
+        })
+        addToast({
+          type: 'info',
+          title: 'We have a tie!',
+          message: 'There must be a majority of votes to agree on who to condemn. Please reconsider your vote.'
+        })
+      }
+      setGameplayData((prevData) => {
+        if (!prevData) return prevData
+        return {
+          ...updatedGameplay,
+          character: prevData.character,
+          selected_character: prevData.selected_character,
+          is_final_vote: prevData.is_final_vote,
+        }
+      })
     }
 
     socket.on('player_joined_gameplay', handlePlayerJoined)
@@ -313,6 +340,8 @@ export default function Gameplay() {
     return <InviteGameplay gameplayData={gameplayData} />
   } else if (gameplayData.status==='IN_PROGRESS') {
     return <GameProgress />
+  } else if (gameplayData.status==='FINISHED') {
+    return <GameOver />
   }
 
 }
