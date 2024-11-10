@@ -35,12 +35,12 @@ export function CharacterDetails(gameplay_data: GameplayData) {
           <ArrowLeft className="h-6 w-6" />
           <span className="sr-only">Go back</span>
         </Link>
-        <h1 className="text-2xl font-bold text-white">{gameplay_data.character.name}</h1>
+        <h1 className="text-2xl font-bold text-white">{gameplay_data.character?.name}</h1>
       </div>
 
       <div className="mb-6 overflow-hidden rounded-lg">
         <Image
-          src={getImageUrl(gameplay_data.character.image)}
+          src={getImageUrl(gameplay_data.character?.image || '')}
           alt="Character"
           width={400}
           height={400}
@@ -54,7 +54,7 @@ export function CharacterDetails(gameplay_data: GameplayData) {
         onToggle={() => toggleSection('overview')}
       >
         <p className="text-gray-300">
-          {gameplay_data.character.overview}
+          {gameplay_data.character?.overview}
         </p>
       </CollapsibleSection>
 
@@ -64,7 +64,7 @@ export function CharacterDetails(gameplay_data: GameplayData) {
         onToggle={() => toggleSection('backstory')}
       >
         <p className="text-gray-300">
-          {gameplay_data.character.backstory}
+          {gameplay_data.character?.backstory}
         </p>
       </CollapsibleSection>
 

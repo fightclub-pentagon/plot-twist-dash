@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { getImageUrl } from '@/lib/utils';
 import Image from 'next/image'
@@ -17,6 +17,7 @@ export function GameOver() {
     if (!gameplayData?.votes || !gameplayData?.characters) return null;
     const maxVotes = Math.max(...Object.values(gameplayData.votes));
     const condemnedId = Number(Object.entries(gameplayData.votes)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .find(([_, votes]) => votes === maxVotes)?.[0]);
     return gameplayData.characters.find(char => char.id === condemnedId);
   };

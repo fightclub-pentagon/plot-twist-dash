@@ -16,7 +16,7 @@ export default function CharacterPage({ params }: CharacterPageProps) {
   const { gameplayData } = useGameplay()
 
   useEffect(() => {
-    if (!gameplayData || gameplayData.character.id !== parseInt(params.characterId)) {
+    if (!gameplayData || gameplayData.character?.id !== parseInt(params.characterId)) {
       router.push('/')
     }
   }, [gameplayData, router, params.characterId])
