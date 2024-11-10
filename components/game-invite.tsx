@@ -18,7 +18,7 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
   const [, setIsCopied] = useState(false)
   const [copyButtonColor, setCopyButtonColor] = useState('bg-purple-700')
   const router = useRouter()
-  const { users, number_of_players, character } = gameplayData
+  const { users, number_of_players, character, owner, current_user } = gameplayData
   const currentPageUrl = `localhost:3000/gameplay/${gameplayData.uuid}`
 
   const generateQRCode = (url: string): string => {
@@ -120,19 +120,23 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
         </ul>
       </section>
 
-      <Button 
-        className="w-full bg-purple-700 hover:bg-purple-600"
+      {owner === current_user.id && (
+        <Button 
+          className="w-full bg-purple-700 hover:bg-purple-600"
         onClick={handleStartGameplay}
       >
-        Start
-      </Button>
+          Start
+        </Button>
+      )}
 
-      <Button 
-        className="w-full bg-red-700 mt-4 hover:bg-red-600"
+      {false && (
+        <Button 
+          className="w-full bg-red-700 mt-4 hover:bg-red-600"
         onClick={handleCancelGameplay}
       >
-        Cancel
-      </Button>
+          Cancel
+        </Button>
+      )}
 
       <Dialog open={isQRModalOpen} onOpenChange={setIsQRModalOpen}>
         <DialogContent className="sm:max-w-md bg-gray-800 text-white">

@@ -7,22 +7,22 @@ import Image from 'next/image'
 import { useGameplay } from '@/contexts/GameplayContext';
 
 export function GameOver() {
-  const isCorrectGuess = false;
   const [revealKiller, setRevealKiller] = useState(false);
   const onRevealKiller = () => setRevealKiller(true);
   const { gameplayData } = useGameplay();
-
+  
   // Find character with most votes
   const getMostVotedCharacter = () => {
     if (!gameplayData?.votes || !gameplayData?.characters) return null;
     const maxVotes = Math.max(...Object.values(gameplayData.votes));
     const condemnedId = Number(Object.entries(gameplayData.votes)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .find(([_, votes]) => votes === maxVotes)?.[0]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    .find(([_, votes]) => votes === maxVotes)?.[0]);
     return gameplayData.characters.find(char => char.id === condemnedId);
   };
-
+  
   const condemnedCharacter = getMostVotedCharacter();
+  const isCorrectGuess = condemnedCharacter?.id === gameplayData?.killer?.id;
   const characterName = condemnedCharacter?.name || 'Unknown Character';
 
   return (

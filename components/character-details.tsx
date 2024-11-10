@@ -8,6 +8,11 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import { GameplayData } from '@/app/gameplay/[gameplayId]/page'
 import { getImageUrl } from '@/lib/utils'
 import { ArrowLeft } from 'lucide-react'
+import DOMPurify from 'dompurify'
+
+const sanitizeHtml = (html: string) => {
+  return DOMPurify.sanitize(html);
+};
 
 export function CharacterDetails(gameplay_data: GameplayData) {
   const [overviewExpanded, setOverviewExpanded] = useState(false)
@@ -73,9 +78,7 @@ export function CharacterDetails(gameplay_data: GameplayData) {
         expanded={rulesExpanded}
         onToggle={() => toggleSection('rules')}
       >
-        <p className="text-gray-300">
-          {gameplay_data.game.rules.content}
-        </p>
+          <div className="text-sm prose prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: sanitizeHtml(gameplay_data.game.rules.content) }} />
       </CollapsibleSection>
 
       <p className="mt-4 text-sm text-gray-400">

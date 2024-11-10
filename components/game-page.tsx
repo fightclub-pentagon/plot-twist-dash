@@ -65,6 +65,36 @@ export function GamePage({ gameId }: { gameId: string }) {
     }
   };
 
+  const handleGenerateImages = async () => {
+    console.log('Generating images');
+    try {
+      const token = localStorage.getItem('userToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+      const response = await fetch(`${API_URL}/image/game/${gameId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to generate images');
+      } else {
+        addToast({
+          type: 'success',
+          title: 'Images generated',
+          message: 'Images generated successfully'
+        });
+        // Refresh the page
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error generating images:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchGame = async () => {
       setIsLoading(true);
@@ -133,6 +163,15 @@ export function GamePage({ gameId }: { gameId: string }) {
         height={300}
         className="w-full rounded-lg object-cover"
       />
+
+      {!game.image && 
+        <Button
+          className="w-full bg-purple-700 hover:bg-purple-600 text-white"
+          onClick={handleGenerateImages}
+        >
+          Generate Images
+        </Button>
+      }
 
       <Button 
         className="w-full bg-purple-700 hover:bg-purple-600 text-white"

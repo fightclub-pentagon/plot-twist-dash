@@ -9,11 +9,20 @@ import { getImageUrl } from '@/lib/utils'
 import { useToast } from './toast'
 
 export function Voting({ progress }: { progress: number }) {
-  const [accused, setAccused] = useState<PublicCharacterResponse | null>(null)
   const [isEditing, setIsEditing] = useState(false)
   const { gameplayData, setGameplayData } = useGameplay()
   const { addToast } = useToast()
   const isEnded = progress >= 100
+
+  const setAccused = (character: PublicCharacterResponse | null) => {
+    setGameplayData((prevData) => {
+      if (!prevData) return prevData
+      return {
+        ...prevData,
+        accused: character
+      }
+    })
+  }
   
   console.log(`progress: ${progress}`)
   console.log(`isEnded: ${isEnded}`)
@@ -64,6 +73,7 @@ export function Voting({ progress }: { progress: number }) {
               if (!prevData) return prevData
               return {
                 ...prevData,
+
                 is_voting_tied: true,
                 is_final_vote: false,
               }
@@ -175,35 +185,35 @@ export function Voting({ progress }: { progress: number }) {
         
         <>
           <p className="text-center text-gray-300 mb-4">
-            {accused ? `You accused ${accused.name}` : isEnded ? "All clues have been revealed. All players must vote on the killer." : "You haven't accused a suspect yet."}
+            {gameplayData?.accused ? `You accused ${gameplayData?.accused.name}` : isEnded ? "All clues have been revealed. All players must vote on the killer." : "You haven't accused a suspect yet."}
           </p>
-          {accused && (
+          {gameplayData?.accused && (
           <div className="flex justify-center mb-6">
             <Image
-              src={getImageUrl(accused.image)}
-              alt={accused.name}
+              src={getImageUrl(gameplayData?.accused.image)}
+              alt={gameplayData?.accused.name}
               width={60}  // Request a larger image
               height={60} // Keep aspect ratio 1:1
               className="rounded-full w-[150px] h-[150px]"
               />
             </div>
           )}
-          {(!isEnded || !accused) && (
+          {(!isEnded || !gameplayData?.accused) && (
           <Button
             onClick={handleEditAccusation}
             className="w-full mb-6"
             variant="outline"
           >
-              {!accused ? "Accuse" : "Change Accusation"}
+              {!gameplayData?.accused ? "Accuse" : "Change Accusation"}
             </Button>
           )}
-          {isEnded && accused && (
+          {isEnded && gameplayData?.accused && (
             <>
             <p className="text-center text-gray-300 mb-4">
               Are you sure?
             </p>
             <Button
-              onClick={() => {}}
+              onClick={handleAccuse}
               className="w-full mb-6"
               variant="outline"
             >

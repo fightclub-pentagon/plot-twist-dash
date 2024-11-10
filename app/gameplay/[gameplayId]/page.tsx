@@ -21,7 +21,7 @@ interface RevelationCardResponse {
 }
 
 interface UserResponse {
-  id: number
+  id: string
   username: string
   avatar: string | null
   tier: string
@@ -68,6 +68,7 @@ export interface GameplayData {
   cards: RevelationCardResponse[]
   character: Character | null
   characters: PublicCharacterResponse[]
+  accused: PublicCharacterResponse | null
   selected_character: number | null
   votes: Votes
   is_voting_tied: boolean | null
@@ -300,6 +301,7 @@ export default function Gameplay() {
         if (!prevData) return prevData
         return {
           ...updatedGameplay,
+          accused: prevData.accused,
           character: prevData.character,
           selected_character: prevData.selected_character,
           is_final_vote: prevData.is_final_vote,
