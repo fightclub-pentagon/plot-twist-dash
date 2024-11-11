@@ -82,7 +82,7 @@ export function RevelationCardViewer({
               <></>
             }
           </div>
-          <p className="text-center">{cardText}</p>
+          <p className="text-center text-gray-300">{cardText}</p>
         </div>
       </main>
 
@@ -90,7 +90,7 @@ export function RevelationCardViewer({
       <nav className="flex items-center justify-between p-4 border-t text-white">
         <button 
           onClick={onPrevious} 
-          className="p-2" 
+          className="p-2 text-gray-300 hover:text-gray-200" 
           aria-label="Previous card"
           disabled={currentIndex === 0}
         >
@@ -102,8 +102,8 @@ export function RevelationCardViewer({
               key={index}
               className={`rounded-full transition-all duration-300 ${
                 dot.isCurrent
-                  ? 'w-3 h-3 bg-primary'
-                  : 'w-2 h-2 bg-muted-foreground'
+                  ? 'w-3 h-3 bg-purple-700'
+                  : 'w-2 h-2 bg-gray-400'
               }`}
               aria-current={dot.isCurrent ? 'true' : 'false'}
             />
@@ -111,7 +111,7 @@ export function RevelationCardViewer({
         </div>
         <button 
           onClick={onNext} 
-          className="p-2" 
+          className="p-2 text-gray-300 hover:text-gray-200" 
           aria-label="Next card"
           disabled={currentIndex === totalCards - 1}
         >

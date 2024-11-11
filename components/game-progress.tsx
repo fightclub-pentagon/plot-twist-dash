@@ -189,7 +189,7 @@ export function GameProgress() {
         cardName={selectedCard?.title || ''}
         cardImage={getImageUrl(selectedCard?.image || '')}
         cardText={selectedCard?.text || ''}
-        currentIndex={selectedCard?.index - 1 || 0}
+        currentIndex={selectedCard?.index || 0}
         totalCards={discoveryCards.length}
         onPrevious={() => {
           handleCardClickOrOpened(discoveryCards.find((card) => card.index === selectedCard?.index - 1)?.id || null)
