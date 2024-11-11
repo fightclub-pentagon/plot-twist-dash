@@ -58,7 +58,10 @@ export function CharacterDetails(gameplay_data: GameplayData) {
         expanded={overviewExpanded}
         onToggle={() => toggleSection('overview')}
       >
-        <p className="text-gray-300">
+        {gameplay_data.character?.is_killer ? 
+        <p className="text-gray-100 font-bold">You are the killer - your mission is to lead others to condemn someone else so you can escape</p> : 
+        false && <p className="text-gray-300 mt-6">You are a survivor</p>}
+        <p className="text-gray-300 mt-6">
           {gameplay_data.character?.overview}
         </p>
       </CollapsibleSection>
