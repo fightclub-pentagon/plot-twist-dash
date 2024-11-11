@@ -14,13 +14,13 @@ import { useRouter } from 'next/navigation'
 
 
 export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData }) {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [, setIsCopied] = useState(false)
   const [copyButtonColor, setCopyButtonColor] = useState('bg-purple-700')
   const router = useRouter()
   const { users, number_of_players, character, owner, current_user } = gameplayData
-  const currentPageUrl = `${API_URL}/gameplay/${gameplayData.uuid}`
+  const currentPageUrl = `${APP_URL}/gameplay/${gameplayData.uuid}`
 
   const generateQRCode = (url: string): string => {
     const encodedUrl = encodeURIComponent(url)
