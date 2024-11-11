@@ -175,14 +175,14 @@ function SignInContent() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
-          <p className="text-sm text-muted-foreground">Quick signin with your favorite provider</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-white">Sign in</h1>
+          <p className="text-sm text-gray-300">Quick signin with your favorite provider</p>
         </div>
-        <div className="grid gap-6">
-          <Button variant="outline" type="button" disabled={isLoading} onClick={handleGoogleSignIn}>
+        <div className="grid gap-6 bg-transparent">
+          <Button className="bg-purple-700 hover:bg-purple-800 text-white" variant="default" type="button" disabled={isLoading} onClick={handleGoogleSignIn}>
             {isLoading ? (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -190,6 +190,7 @@ function SignInContent() {
             )}{" "}
             Google
           </Button>
+          {false &&
           <Button variant="outline" type="button" disabled={isLoading} onClick={handleMicrosoftSignIn}>
             {isLoading ? (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -198,12 +199,13 @@ function SignInContent() {
             )}{" "}
             Microsoft
           </Button>
-          <div className="relative">
+          }
+          <div className="relative bg-transparent">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t border-gray-500" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or sign in with your email</span>
+              <span className="bg-gray-900 px-2 text-muted-foreground">Or sign in with your email</span>
             </div>
           </div>
           <form onSubmit={handleEmailSignIn}>
@@ -229,15 +231,15 @@ function SignInContent() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button disabled={isLoading}>
+              <Button disabled={isLoading} className="bg-purple-700 hover:bg-purple-800 text-white">
                 {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
                 Sign In with Email
               </Button>
             </div>
           </form>
-          <p className="text-sm text-center">
+          <p className="text-sm text-center text-gray-300">
             Would you like to sign in with email but you don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-blue-500 hover:underline">
+            <Link href="/signup" className="text-blue-300 hover:underline">
               Sign up
             </Link>
           </p>
