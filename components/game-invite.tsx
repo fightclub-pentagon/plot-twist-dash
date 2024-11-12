@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { GameplayData } from '@/app/gameplay/[gameplayId]/page'
 import { getImageUrl } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
+import { useToast } from './toast'
 
 
 export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData }) {
@@ -21,6 +22,7 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
   const router = useRouter()
   const { users, number_of_players, character, owner, current_user } = gameplayData
   const currentPageUrl = `${APP_URL}/gameplay/${gameplayData.uuid}`
+  const { addToast } = useToast()
 
   const generateQRCode = (url: string): string => {
     const encodedUrl = encodeURIComponent(url)
@@ -39,8 +41,17 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
   }
 
   const handleStartGameplay = () => {
-    console.log('Starting game')
-    router.push(`/gameplay/confirmation`)
+    console.log('Starting game - function called')
+
+    if (users.length === number_of_players) {
+      router.push(`/gameplay/confirmation`)
+    } else {
+      addToast({
+        type: 'error',
+        title: 'Not enough players 🙀',
+        message: 'The party room needs to be full to start the game. All characters must be assigned.'
+      })
+    }
   }
 
   const handleCancelGameplay = () => {
