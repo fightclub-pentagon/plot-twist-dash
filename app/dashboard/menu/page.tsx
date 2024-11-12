@@ -12,11 +12,11 @@ export default function MenuPage() {
       <div className="p-4">
         <h1 className="text-2xl font-bold text-white mb-4">Menu</h1>
         <p className="text-gray-300">Access settings and other options.</p>
-        <a href={`https://billing.stripe.com/p/login/test_00g02rdWF6tmfa87ss?prefilled_email=${user?.email}`}>
+        {false && <a href={`https://billing.stripe.com/p/login/test_00g02rdWF6tmfa87ss?prefilled_email=${user?.email}`}>
           <Button className="w-full bg-purple-700 mt-4 hover:bg-purple-600 text-bold text-white">
             Manage Subscription
           </Button>
-        </a>
+        </a>}
         <div className="mt-4">
           <SignOutButton />
         </div>

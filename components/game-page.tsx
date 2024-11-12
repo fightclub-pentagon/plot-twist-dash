@@ -149,7 +149,7 @@ export function GamePage({ gameId }: { gameId: string }) {
   return (
     <div className="min-h-screen bg-gray-900 p-4 space-y-4">
       <header className="flex items-center space-x-4">
-        <Link href="/dashboard/my-games" className="text-white hover:text-gray-300">
+        <Link href="/dashboard" className="text-white hover:text-gray-300">
           <ArrowLeft className="h-6 w-6" />
           <span className="sr-only">Go back</span>
         </Link>
