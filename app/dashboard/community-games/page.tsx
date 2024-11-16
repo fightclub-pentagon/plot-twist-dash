@@ -12,7 +12,7 @@ interface GameResponse {
       game_id: number;
       image: string;
       title: string;
-      n_of_players: number;
+      number_of_players: number;
     }[];
   };
 }
@@ -38,7 +38,7 @@ async function getFreeGames(): Promise<DisplayGameThumbnail[]> {
     id: game.game_id,
     imageUrl: game.image,
     title: game.title,
-    playerCount: game.n_of_players,
+    playerCount: game.number_of_players,
   }));
 }
 
