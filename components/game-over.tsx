@@ -27,12 +27,14 @@ export function GameOver() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 text-center">
-      {!revealKiller ?
       <div className="bg-gray-800 text-white rounded-lg shadow-xl p-6 w-full max-w-md space-y-6">
-        <h1 className="text-3xl font-bold">Game Over</h1>
-        
-        <p className="text-lg ">
-          All players voted and the majority decided to condemn {characterName}.
+        <h1 className={`text-3xl font-bold ${isCorrectGuess ? 'text-green-600' : 'text-red-500'}`}>
+          {isCorrectGuess ? 'You Won!' : 'The Killer Won!'}
+        </h1>
+      {!revealKiller ?
+        <div>
+          <p className="text-lg ">
+            All players voted and the majority decided to condemn {characterName}.
         </p>
         <div className="flex justify-center m-6">
             <Image
@@ -68,8 +70,7 @@ export function GameOver() {
         </Button>
       </div>
       :
-      <div className="bg-gray-800 text-white rounded-lg shadow-xl p-6 w-full max-w-md space-y-6">
-        <h1 className="text-3xl font-bold">Game Over</h1>
+      <div>
         {isCorrectGuess ? (
           <p className="text-green-600 font-semibold">
             Your guess was right and {characterName} will pay for their crime. Thank you for your thorough investigation.
@@ -96,6 +97,7 @@ export function GameOver() {
         <p className="text-gray-400">{gameplayData?.conclusion || 'No conclusion provided'}</p>
       </div>
       }
+    </div>
     </div>
   )
 }
