@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useGameplay } from '@/contexts/GameplayContext'
 import { GameConfirmationComponent } from '@/components/game-confirmation'
