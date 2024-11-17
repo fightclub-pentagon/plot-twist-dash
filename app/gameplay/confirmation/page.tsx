@@ -14,12 +14,8 @@ interface ConfirmationPageProps {
 export default function ConfirmationPage(/*{ params }: ConfirmationPageProps*/) {
   const router = useRouter()
   const { gameplayData } = useGameplay()
-  const [ duration, setDuration ] = useState(gameplayData?.duration || 90)
 
-  useEffect(() => {
-    console.log('duration', gameplayData?.duration)
-  }, [gameplayData])
-  const onStartGame = async (duration: number) => {
+  const onStartGame = async () => {
     if (!gameplayData) {
       console.log(gameplayData)
       return router.push('/')
@@ -32,7 +28,7 @@ export default function ConfirmationPage(/*{ params }: ConfirmationPageProps*/) 
         throw new Error('No authentication token found')
       }
 
-      const response = await fetch(`${API_URL}/gameplay/${gameplayData.uuid}/play?duration=${duration}`, {
+      const response = await fetch(`${API_URL}/gameplay/${gameplayData.uuid}/play`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -62,8 +58,6 @@ export default function ConfirmationPage(/*{ params }: ConfirmationPageProps*/) 
     <GameConfirmationComponent 
       onStartGame={onStartGame} 
       onGoBack={onGoBack} 
-      duration={duration} 
-      setDuration={setDuration}
     />
   )
 }

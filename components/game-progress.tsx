@@ -10,6 +10,7 @@ import { RevelationCardViewer } from "./revelation-card-viewer"
 import { Voting } from "./voting"
 import { PublicCharacterResponse } from "@/app/gameplay/[gameplayId]/page"
 import Image from 'next/image'
+import { Button } from "./ui/button"
 
 
 interface DiscoveryCard {
@@ -103,6 +104,18 @@ export function GameProgress() {
     // setProgress(prev => Math.min(prev + 14, 100))
   }
 
+  const onShowNextCard = () => {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL
+    const token = localStorage.getItem('userToken');
+    fetch(`${API_URL}/gameplay/${gameplayData?.uuid}/next-card`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+  }
+
   return (
       <div className="min-h-screen bg-gray-900 p-4">
       {gameplayData?.is_final_vote ?
@@ -167,6 +180,17 @@ export function GameProgress() {
               </button>
             </li>
           ))}
+
+          {progress < 100 &&
+            <Button 
+              onClick={onShowNextCard}
+              className="w-full bg-purple-700 hover:bg-purple-900 text-white"
+            >
+              
+              <span className="animate-pulse">{progress === 0 ? 'Show first card' : 'Show next card...'}</span>
+            </Button>
+          }
+
           </ul>
           </section>
           {progress <= 100 ?
