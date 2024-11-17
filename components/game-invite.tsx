@@ -43,7 +43,7 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
   const handleStartGameplay = () => {
     console.log('Starting game - function called')
 
-    if (users.length === number_of_players || current_user.id === 'ZUCg7RvlwzMbqtJqdpOU9UC8VTg1') {
+    if (users.length === number_of_players || current_user.id === 'ZUCg7RvlwzMbqtJqdpOU9UC8VTg1' || current_user.id === 'NU0iPFycFOP5wSI5z3SkxGIcEoP2') {
       router.push(`/gameplay/confirmation`)
     } else {
       addToast({
