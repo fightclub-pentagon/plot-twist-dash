@@ -5,12 +5,12 @@ import { useParams } from 'next/navigation'
 import { InviteGameplay } from "@/components/game-invite"
 import io, { Socket } from 'socket.io-client'
 import { useUser } from '@/contexts/UserContext'
-import { GameplayInvitation } from '@/components/gameplay-invitation'
 import { useGameplay } from '@/contexts/GameplayContext'
 import { Character } from '@/types'
 import { useToast } from '@/components/toast'
 import { GameProgress } from '@/components/game-progress'
 import { GameOver } from '@/components/game-over'
+import { withAuth } from '@/components/withAuth'
 
 interface RevelationCardResponse {
   id: number
@@ -169,7 +169,7 @@ function useSocket(gameplayId: string) {
   return { socket: socketRef.current, isConnected, connectionError }
 }
 
-export default function Gameplay() {
+function GameplayComponent() {
   const { user } = useUser()
   const { gameplayId } = useParams()
   const { addToast } = useToast()
@@ -318,10 +318,6 @@ export default function Gameplay() {
     }
   }, [socket, setGameplayData])
 
-  if (!user) {
-    return <GameplayInvitation gameplayId={gameplayId as string} />
-  }
-
   if (isLoading) {
     return <h1>Loading...</h1>
   }
@@ -347,3 +343,5 @@ export default function Gameplay() {
   }
 
 }
+
+export const Gameplay = withAuth(GameplayComponent)

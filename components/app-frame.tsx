@@ -6,8 +6,9 @@ import { useUser } from '@/contexts/UserContext'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useToast } from "./toast"
+import { withAuth } from "./withAuth"
 
-export function AppFrameComponent({ children }: { children: React.ReactNode }) {
+function AppFrameBase({ children }: { children: React.ReactNode }) {
   const { user } = useUser()
   const router = useRouter()
   const { addToast } = useToast()
@@ -57,12 +58,12 @@ export function AppFrameComponent({ children }: { children: React.ReactNode }) {
           <span className="text-xs mt-1">Community</span>
         </Link>
         <Link href="/dashboard/my-games" className="flex flex-col items-center">
-          <Gamepad2 size={24} />
-          <span className="text-xs mt-1">My Games</span>
+          <Gamepad2 color="gray" size={24} />
+          <span className="text-xs mt-1 text-gray-500">My Games</span>
         </Link>
         <Link href="/dashboard/creation-studio" className="flex flex-col items-center">
-          <PenTool size={24} />
-          <span className="text-xs mt-1">Create</span>
+          <PenTool color="gray" size={24} />
+          <span className="text-xs mt-1 text-gray-500">Studio</span>
         </Link>
         <Link href="/dashboard/menu" className="flex flex-col items-center">
           <Menu size={24} />
@@ -72,3 +73,5 @@ export function AppFrameComponent({ children }: { children: React.ReactNode }) {
     </div>
   )
 }
+
+export const AppFrameComponent = withAuth(AppFrameBase)

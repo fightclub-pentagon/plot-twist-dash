@@ -6,7 +6,7 @@ import { ArrowRight, Mountain } from "lucide-react"
 
 export function LandingPageComponent() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div translate="no" className="flex flex-col min-h-screen">
       {false &&
       <header className="px-4 lg:px-6 h-14 flex items-center">
         <>

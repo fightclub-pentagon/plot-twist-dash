@@ -12,13 +12,14 @@ import DOMPurify from 'dompurify';
 import { getImageUrl } from "@/lib/utils"
 import { Game, Character } from '@/types'
 import { useToast } from "./toast"
+import { withAuth } from "./withAuth"
 
 // ... (in your component)
 const sanitizeHtml = (html: string) => {
   return DOMPurify.sanitize(html);
 };
 
-export function GamePage({ gameId }: { gameId: string }) {
+function GamePageBase({ gameId }: { gameId: string }) {
   const [game, setGame] = useState<Game | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -226,3 +227,5 @@ export function GamePage({ gameId }: { gameId: string }) {
     </div>
   );
 }
+
+export const GamePage = withAuth(GamePageBase)

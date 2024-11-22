@@ -3,14 +3,9 @@
 import { useRouter } from 'next/navigation'
 import { useGameplay } from '@/contexts/GameplayContext'
 import { GameConfirmationComponent } from '@/components/game-confirmation'
-/*
-interface ConfirmationPageProps {
-  params: {
-    gameplay_uuid: string
-  }
-}*/
+import { withAuth } from '@/components/withAuth'
 
-export default function ConfirmationPage(/*{ params }: ConfirmationPageProps*/) {
+function ConfirmationPage() {
   const router = useRouter()
   const { gameplayData } = useGameplay()
 
@@ -46,6 +41,7 @@ export default function ConfirmationPage(/*{ params }: ConfirmationPageProps*/) 
       // Handle error (e.g., show an error message to the user)
     }
   }
+
   const onGoBack = () => {
     if (!gameplayData) {
       console.log(gameplayData)
@@ -53,6 +49,7 @@ export default function ConfirmationPage(/*{ params }: ConfirmationPageProps*/) 
     }
     router.push(`/gameplay/${gameplayData.uuid}`)
   }
+
   return (
     <GameConfirmationComponent 
       onStartGame={onStartGame} 
@@ -60,3 +57,6 @@ export default function ConfirmationPage(/*{ params }: ConfirmationPageProps*/) 
     />
   )
 }
+
+// Export the wrapped component as the default export
+export default withAuth(ConfirmationPage)
