@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { InviteGameplay } from "@/components/game-invite"
 import io, { Socket } from 'socket.io-client'
-import { useUser } from '@/contexts/UserContext'
 import { useGameplay } from '@/contexts/GameplayContext'
 import { Character } from '@/types'
 import { useToast } from '@/components/toast'
@@ -169,8 +168,7 @@ function useSocket(gameplayId: string) {
   return { socket: socketRef.current, isConnected, connectionError }
 }
 
-function GameplayComponent() {
-  const { user } = useUser()
+function Gameplay() {
   const { gameplayId } = useParams()
   const { addToast } = useToast()
   const [isLoading, setIsLoading] = useState(true)
@@ -344,4 +342,4 @@ function GameplayComponent() {
 
 }
 
-export const Gameplay = withAuth(GameplayComponent)
+export default withAuth(Gameplay)
