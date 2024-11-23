@@ -4,9 +4,11 @@ import { AppFrameComponent } from '@/components/app-frame'
 import { SignOutButton } from '@/components/signout-btn'
 import { Button } from '@/components/ui/button'
 import { useUser } from '@/contexts/UserContext';
+import { useRouter } from 'next/navigation';
 
 export default function MenuPage() {
   const { user } = useUser();
+  const router = useRouter();
   return (
     <AppFrameComponent>
       <div className="p-4">
@@ -17,6 +19,13 @@ export default function MenuPage() {
             Manage Subscription
           </Button>
         </a>}
+        <Button 
+          variant="outline" 
+          className="w-full border-purple-700 bg-transparent mt-4 hover:bg-purple-600 text-bold text-white"
+          onClick={() => router.push('/feedback')}
+        >
+          Feedback
+        </Button>
         <div className="mt-4">
           <SignOutButton />
         </div>

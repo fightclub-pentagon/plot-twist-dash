@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Send } from 'lucide-react'
+import { ArrowLeft, Send } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from './toast'
 import { withAuth } from './withAuth'
+import Link from 'next/link'
 
 function FeedbackComponent() {
   const [feedback, setFeedback] = useState('')
@@ -62,7 +63,13 @@ function FeedbackComponent() {
           <p className="text-xl font-semibold text-white">Thank you for your feedback</p>
         </div>
       )}
-      <h1 className="text-2xl font-bold text-white mb-2">Send Feedback...</h1>
+      <div className="mb-4 flex items-center">
+        <Link href={`/dashboard/menu`} className="mr-4 text-2xl text-gray-400 hover:text-gray-300">
+          <ArrowLeft className="h-6 w-6" />
+          <span className="sr-only">Go back</span>
+        </Link>
+        <h1 className="text-2xl font-bold text-white">Send Feedback...</h1>
+      </div>
       <p className="text-gray-300 mb-6">
         We are eager to know your thoughts about your experience with Plot Twist.
       </p>
