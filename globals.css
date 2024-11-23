@@ -1,0 +1,15 @@
+@keyframes fly-plane {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px) translateX(100px);
+    opacity: 0;
+  }
+}
+
+.animate-fly-plane {
+  animation: fly-plane 1.5s ease-in-out forwards;
+}
+
