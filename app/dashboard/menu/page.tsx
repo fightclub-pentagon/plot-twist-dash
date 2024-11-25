@@ -19,6 +19,15 @@ export default function MenuPage() {
             Manage Subscription
           </Button>
         </a>}
+        {user?.email === 'goncalo.bbull@gmail.com' &&
+        <Button
+          variant="outline"
+          className="w-full border-purple-700 bg-transparent mt-4 hover:bg-purple-600 text-bold text-white"
+          onClick={() => router.push('/admin/game-review')}
+        >
+          Admin Panel
+        </Button>
+        }
         <Button 
           variant="outline" 
           className="w-full border-purple-700 bg-transparent mt-4 hover:bg-purple-600 text-bold text-white"

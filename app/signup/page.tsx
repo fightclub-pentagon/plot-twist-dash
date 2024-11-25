@@ -25,7 +25,7 @@ function SignUpContent() {
     // create user in database
     // make a request to http://localhost:5001/user with username and email
     // include the token in the request
-    const token = await auth.currentUser?.getIdToken()
+    const token = localStorage.getItem('userToken')
     const response = await fetch('http://localhost:5001/user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },

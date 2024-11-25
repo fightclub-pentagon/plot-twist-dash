@@ -25,7 +25,7 @@ function SignInContent() {
   const isUserExistentInDatabase = async () => {
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const token = await auth.currentUser?.getIdToken()
+      const token = localStorage.getItem('userToken')
       const response = await fetch(`${API_URL}/user/${user?.uid}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
@@ -39,7 +39,7 @@ function SignInContent() {
   const createUserInDatabase = async (email: string, username: string, signin_method: string) => {
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const token = await auth.currentUser?.getIdToken()
+      const token = localStorage.getItem('userToken')
       const response = await fetch(`${API_URL}/user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },

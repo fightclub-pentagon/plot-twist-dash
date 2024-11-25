@@ -3,7 +3,6 @@
 
 import { AppFrameComponent } from '@/components/app-frame'
 import { MobileCarouselComponent, DisplayGameThumbnail } from '@/components/mobile-carousel'
-import { auth } from '@/firebase';
 import { useEffect, useState } from 'react';
 
 interface GameResponse {
@@ -19,7 +18,7 @@ interface GameResponse {
 
 async function getFreeGames(): Promise<DisplayGameThumbnail[]> {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const token = await auth.currentUser?.getIdToken()
+  const token = localStorage.getItem('userToken')
   const response = await fetch(`${API_URL}/game/community`, {
     method: 'GET',
     headers: {
