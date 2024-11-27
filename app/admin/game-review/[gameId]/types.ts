@@ -20,6 +20,7 @@ export interface Game {
   title: string
   image: string
   presentation_text: string
+  conclusion: string
   created_at: string
   updated_at: string
   created_by: string

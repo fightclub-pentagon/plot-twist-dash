@@ -19,7 +19,7 @@ export default function MenuPage() {
             Manage Subscription
           </Button>
         </a>}
-        {user?.email === 'goncalo.bbull@gmail.com' &&
+        {(user?.email === 'goncalo.bbull@gmail.com' || user?.email === 'paulinaantoniahase@gmail.com') &&
         <Button
           variant="outline"
           className="w-full border-purple-700 bg-transparent mt-4 hover:bg-purple-600 text-bold text-white"
