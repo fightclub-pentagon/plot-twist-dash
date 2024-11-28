@@ -40,8 +40,8 @@ export function GameReviewContent({ gameId }: { gameId: string }) {
   return (
     <div className='bg-gray-900 text-white'>
       <div className="container mx-auto py-8">
+        <h1 className="text-4xl text-center font-bold mb-6">{gameData?.game.title}</h1>
         <div className="flex flex-col md:flex-row gap-4 mb-8 p-4">
-          <h1 className="text-4xl font-bold mb-6">{gameData?.game.title}</h1>
           <div className="w-full md:w-1/3">
             <Image
               src={getImageUrl(gameData?.game.image || '')}
@@ -91,8 +91,8 @@ export function GameReviewContent({ gameId }: { gameId: string }) {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m-4">
-          <h2 className="text-2xl font-semibold mb-4">Cards</h2>
+        <h2 className="text-2xl font-semibold m-4">Cards</h2>
+        <div className="grid grid-cols-1 gap-4 m-4">
           {gameData?.cards.map((card) => (
             <Card key={card.id} className="bg-gray-800 text-gray-200 border-none p-4 rounded-lg">
               <CardHeader>
