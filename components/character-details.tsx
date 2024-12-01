@@ -61,9 +61,7 @@ export function CharacterDetails(gameplay_data: GameplayData) {
         {gameplay_data.character?.is_killer ? 
         <p className="text-gray-100 font-bold">You are the killer - your mission is to lead others to condemn someone else so you can escape</p> : 
         false && <p className="text-gray-300 mt-6">You are a survivor</p>}
-        <p className="text-gray-300 mt-6">
-          {gameplay_data.character?.overview}
-        </p>
+        <div className="text-md prose prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: sanitizeHtml(gameplay_data.character?.overview || '') }} />
       </CollapsibleSection>
 
       <CollapsibleSection
@@ -71,9 +69,7 @@ export function CharacterDetails(gameplay_data: GameplayData) {
         expanded={backstoryExpanded}
         onToggle={() => toggleSection('backstory')}
       >
-        <p className="text-gray-300">
-          {gameplay_data.character?.backstory}
-        </p>
+        <div className="text-md prose prose-invert max-w-none text-gray-300" dangerouslySetInnerHTML={{ __html: sanitizeHtml(gameplay_data.character?.backstory || '') }} />
       </CollapsibleSection>
 
       <CollapsibleSection
