@@ -97,6 +97,12 @@ export function InviteGameplay({ gameplayData }: { gameplayData: GameplayData })
         </div>
       </section>
 
+      {gameplayData.game.presentation_text && (
+      <section>
+        <p className="text-sm text-gray-300 mb-2">{gameplayData.game.presentation_text}</p>
+        </section>
+      )}
+  
       <section> 
         <h2 className="text-lg text-gray-300 font-semibold">Prepare your character</h2>
         <ul className="space-y-2 mb-6">
