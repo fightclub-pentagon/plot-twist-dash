@@ -6,8 +6,8 @@ import { ToastProvider } from '@/components/toast'
 import { GameplayProvider } from '@/contexts/GameplayContext'
 
 export const metadata: Metadata = {
-  title: 'Your Landing Page',
-  description: 'Welcome to your new landing page',
+  title: 'PlotTwist',
+  description: 'PlotTwist Game Application',
 }
 
 export default function RootLayout({
