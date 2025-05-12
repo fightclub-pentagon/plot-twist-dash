@@ -13,6 +13,7 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
     const { addToast } = useToast();
     const router = useRouter();
     const [userTier, setUserTier] = useState<string | null>(null);
+    const [userCredits, setUserCredits] = useState<number>(0);
     const [isLoading, setIsLoading] = useState(true);
     const pathname = usePathname();
 
@@ -33,6 +34,7 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
             if (response.ok && isMounted) {
               const userData = await response.json();
               setUserTier(userData.tier);
+              setUserCredits(userData.credits);
             } else if (isMounted) {
               handleError('Sorry we lost you... 😓', 'Please go back to the home page and sign in again.');
             }
@@ -78,7 +80,8 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
       return <div>Loading...</div>;
     }
 
-    if (userTier === 'FREE' && 
+    if (userTier === 'FREE' &&
+        userCredits === 0 &&
         pathname !== '/dashboard/menu' && 
         !pathname.startsWith('/gameplay/') &&
         pathname !== '/' &&
@@ -91,7 +94,7 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
       );
     }
 
-    if (userTier === 'ADMIN' || userTier === 'BASE' || userTier == 'PLUS' || userTier === 'PREMIUM' || pathname === '/dashboard/menu') {
+    if (userCredits > 0 || userTier === 'ADMIN' || userTier === 'BASE' || userTier == 'PLUS' || userTier === 'PREMIUM' || pathname === '/dashboard/menu') {
       return <WrappedComponent {...props} />;
     }
 

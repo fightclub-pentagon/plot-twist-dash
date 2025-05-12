@@ -17,6 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+      <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+      </head>
       <body>
         <ToastProvider>
           <UserProvider>
