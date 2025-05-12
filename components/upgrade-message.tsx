@@ -15,11 +15,11 @@ export function UpgradeMessage() {
       {false && <OneTimePricingTableComponent />}
       <div className="container mx-auto px-4 py-8 bg-gray-900">
         <h2 className="text-3xl font-bold text-center mb-4 text-white">Choose Your Plan</h2>
-        <stripe-pricing-table
+        {false && <stripe-pricing-table
           pricing-table-id={pricingTableId}
           publishable-key={publishableKey}
           client-reference-id={userId}>
-        </stripe-pricing-table>
+        </stripe-pricing-table>}
       </div>
     </div>
   );
