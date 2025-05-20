@@ -14,7 +14,14 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com"
+            value: [
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "https://js.stripe.com",
+              "https://apis.google.com",
+              "https://www.googleapis.com",
+              "https://*.google.com",
+              "https://www.gstatic.com",
+            ].join(' ')
           }
         ],
       },
