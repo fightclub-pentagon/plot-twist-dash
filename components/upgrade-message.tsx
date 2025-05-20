@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import { PricingTableComponent } from './pricing-table';
 import { OneTimePricingTableComponent } from './pricing-table-onetime-products';
