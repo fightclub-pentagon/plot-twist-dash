@@ -3,8 +3,8 @@
 import React from 'react';
 
 interface Props {
-  fallback: React.ReactNode;
   children: React.ReactNode;
+  fallback: React.ReactNode;
 }
 
 interface State {
@@ -19,17 +19,21 @@ export class PricingErrorBoundary extends React.Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+    return {
+      hasError: true,
+      error,
+    };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Pricing table error:', error, errorInfo);
+    console.error('Pricing error boundary caught error:', error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return this.props.fallback;
     }
+
     return this.props.children;
   }
 }

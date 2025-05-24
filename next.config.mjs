@@ -7,6 +7,12 @@ const nextConfig = {
     config.externals = [...(config.externals || []), 'stripe']
     return config
   },
+  // Increase logging in production
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   async headers() {
     return [
       {
@@ -15,13 +21,21 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: [
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "https://js.stripe.com",
-              "https://apis.google.com",
-              "https://www.googleapis.com",
-              "https://*.google.com",
-              "https://www.gstatic.com",
-            ].join(' ')
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://apis.google.com https://www.googleapis.com https://*.google.com https://www.gstatic.com",
+              "frame-src 'self' https://js.stripe.com https://accounts.google.com",
+              "connect-src 'self' https://api.stripe.com https://js.stripe.com",
+              "img-src 'self' data: https://*.stripe.com",
+              "style-src 'self' 'unsafe-inline' https://js.stripe.com"
+            ].join('; ')
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
           }
         ],
       },
