@@ -14,43 +14,46 @@ interface Product {
   features: string[]
   stripeLink: string
   showPrice: boolean
+  isRecommended?: boolean
 }
 
 const products: Product[] = [
   {
-    name: 'Single Adventure',
-    description: 'Perfect for a one-time special event. Create and host a unique mystery game.',
-    price: 9.90,
-    features: ['One complete mystery game', 'Access to basic tools', 'Community support'],
-    stripeLink: 'https://buy.stripe.com/test_singleAdventure',
+    name: '100 Credits Pack',
+    description: 'Start your mystery journey with enough credits to create your first adventures.',
+    price: 4.90,
+    features: [
+      '100 Credits Balance',
+      'Generate 1 Mystery Game',
+      'Access to All Creation Tools'
+    ],
+    stripeLink: process.env.NEXT_PUBLIC_PRODUCT_LINK_100!,
     showPrice: true,
   },
   {
-    name: 'Mystery Bundle',
-    description: 'Get a collection of pre-made mysteries plus the ability to create your own.',
-    price: 24.90,
+    name: '300 Credits Pack',
+    description: 'Perfect for creating multiple mysteries and exploring different storylines.',
+    price: 7.90,
     features: [
-      'Three mystery games',
-      'Create one custom game',
-      'Access to all tools',
-      'Premium support'
+      '300 Credits Balance',
+      'Generate 3 Mystery Games',
+      'Access to All Creation Tools'
     ],
-    stripeLink: 'https://buy.stripe.com/test_mysteryBundle',
+    stripeLink: process.env.NEXT_PUBLIC_PRODUCT_LINK_300!,
     showPrice: true,
+    isRecommended: true,
   },
   {
-    name: 'Custom Package',
-    description: 'Tailored solution for special events and large organizations',
-    price: 99.99,
+    name: '1000 Credits Pack',
+    description: 'Best value for mystery enthusiasts and frequent creators.',
+    price: 12.90,
     features: [
-      'Custom number of games',
-      'Branded experience',
-      'Advanced tools access',
-      'Priority support',
-      'Custom features'
+      '1000 Credits Balance',
+      'Generate 10 Mystery Games',
+      'Access to All Creation Tools'
     ],
-    stripeLink: 'https://buy.stripe.com/test_customPackage',
-    showPrice: false,
+    stripeLink: process.env.NEXT_PUBLIC_PRODUCT_LINK_1000!,
+    showPrice: true,
   },
 ]
 
@@ -59,10 +62,20 @@ export function OneTimePricingTableComponent() {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gray-900">
-      <h2 className="text-3xl font-bold text-center mb-8 text-white">One-Time Purchase Options</h2>
+      <h2 className="text-3xl font-bold text-center mb-8 text-white">Get your credits here</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {products.map((product) => (
-          <Card key={product.name} className="flex flex-col bg-gray-700 border-transparent">
+          <Card 
+            key={product.name} 
+            className={`flex flex-col bg-gray-700 relative ${
+              product.isRecommended ? 'border-2 border-yellow-500' : 'border-transparent'
+            }`}
+          >
+            {product.isRecommended && (
+              <div className="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-gray-900 px-3 py-0.5 rounded-full text-xs font-medium">
+                Recommended
+              </div>
+            )}
             <CardHeader>
               <CardTitle className="text-white">{product.name}</CardTitle>
               <CardDescription className="text-gray-200">
@@ -72,7 +85,7 @@ export function OneTimePricingTableComponent() {
             <CardContent className="flex-grow">
               {product.showPrice && (
                 <p className="text-3xl font-bold mb-4 text-white">
-                  ${product.price.toFixed(2)}
+                  €{product.price.toFixed(2)}
                   <span className="text-sm font-normal"> one-time</span>
                 </p>
               )}
