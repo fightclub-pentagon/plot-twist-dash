@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useUser } from '@/contexts/UserContext';
 import { AppFrameComponent } from '@/components/app-frame';
-import { UpgradeMessage } from '@/components/upgrade-message';
 import { useToast } from './toast';
+import { OneTimePricingTableComponent } from './pricing-table-onetime-products';
 
 export function withTierAccess<P extends object>(WrappedComponent: React.ComponentType<P>) {
   return function TierAccessComponent(props: P) {
@@ -80,16 +80,16 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
       return <div>Loading...</div>;
     }
 
-    if (userTier === 'FREE' &&
-        userCredits === 0 &&
-        pathname !== '/dashboard/menu' && 
-        !pathname.startsWith('/gameplay/') &&
-        pathname !== '/' &&
-        pathname !== '/signin' &&
-        pathname !== '/signup') {
+    if (
+      userCredits < 100 &&
+      pathname !== '/dashboard/menu' &&
+      !pathname.startsWith('/gameplay/') &&
+      pathname !== '/' &&
+      pathname !== '/signin' &&
+      pathname !== '/signup') {
       return (
         <AppFrameComponent>
-          <UpgradeMessage />
+          <OneTimePricingTableComponent />
         </AppFrameComponent>
       );
     }
@@ -98,6 +98,8 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
       return <WrappedComponent {...props} />;
     }
 
-    return null;
+    return <h1 className="text-center text-red-500">
+      Error
+    </h1>;
   };
 }
