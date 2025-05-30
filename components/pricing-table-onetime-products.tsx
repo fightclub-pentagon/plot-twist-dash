@@ -100,7 +100,7 @@ export function OneTimePricingTableComponent() {
             </CardContent>
             <CardFooter>
               <Button className="w-full bg-purple-700 hover:bg-purple-600" asChild>
-                <a href={`${product.stripeLink}?prefilled_email=${user?.email}`}>
+                <a href={`${product.stripeLink}?prefilled_email=${user?.email}&client_reference_id=${user?.uid}`}>
                   {product.showPrice ? 'Buy Now' : 'Contact Sales'}
                 </a>
               </Button>
