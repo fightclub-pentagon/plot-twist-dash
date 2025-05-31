@@ -80,7 +80,7 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
       return <div>Loading...</div>;
     }
 
-    if (
+    if (false &&
       userCredits < 100 &&
       pathname !== '/dashboard/menu' &&
       !pathname.startsWith('/gameplay/') &&
@@ -94,7 +94,7 @@ export function withTierAccess<P extends object>(WrappedComponent: React.Compone
       );
     }
 
-    if (userCredits > 0 || userTier === 'ADMIN' || userTier === 'BASE' || userTier == 'PLUS' || userTier === 'PREMIUM' || pathname === '/dashboard/menu') {
+    if (userCredits >= 0 || userTier === 'ADMIN' || userTier === 'BASE' || userTier == 'PLUS' || userTier === 'PREMIUM' || pathname === '/dashboard/menu') {
       return <WrappedComponent {...props} />;
     }
 
