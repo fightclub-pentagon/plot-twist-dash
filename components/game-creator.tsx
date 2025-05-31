@@ -1,7 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from 'next/navigation'
 import { useUser } from '@/contexts/UserContext'
+import { useToast } from '@/components/toast'
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
@@ -31,6 +33,8 @@ const LoadingOverlay = () => (
 export function GameCreatorComponent() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL
   const { user } = useUser()
+  const router = useRouter()
+  const { addToast } = useToast()
   const [gameData, setGameData] = useState<GameData>({
     isGuidedMode: true,
     where: "",
@@ -49,9 +53,48 @@ export function GameCreatorComponent() {
   const handleCreate = async () => {
     if (!user) {
       console.error('User not authenticated')
+      addToast({
+        type: 'error',
+        title: 'Authentication Error',
+        message: 'You must be signed in to create a game'
+      })
       return
     }
 
+    // Validate required fields
+    if (gameData.isGuidedMode) {
+      if (!gameData.where.trim() || !gameData.when.trim() || !gameData.who.trim()) {
+        console.error('Please fill in all story fields (Where, When, Who)')
+        addToast({
+          type: 'warning',
+          title: 'Missing Information',
+          message: 'Please fill in all story fields (Where, When, Who)'
+        })
+        return
+      }
+    } else {
+      if (!gameData.freePrompt.trim()) {
+        console.error('Please provide a game prompt')
+        addToast({
+          type: 'warning',
+          title: 'Missing Prompt',
+          message: 'Please provide a game prompt'
+        })
+        return
+      }
+    }
+
+    if (!gameData.players || !gameData.rounds) {
+      console.error('Please select number of players and rounds')
+      addToast({
+        type: 'warning',
+        title: 'Missing Selection',
+        message: 'Please select number of players and rounds'
+      })
+      return
+    }
+
+    console.log('Starting game creation with data:', gameData)
     setIsLoading(true)
     try {
       const token = localStorage.getItem('userToken')
@@ -73,11 +116,23 @@ export function GameCreatorComponent() {
       }
 
       const result: CreateGameResponse = await response.json()
-      console.log('Game created:', result)
-      // Handle successful game creation (e.g., show a success message, redirect, etc.)
+      console.log('Game created successfully:', result)
+      
+      addToast({
+        type: 'success',
+        title: 'Game Created!',
+        message: 'Your game has been created successfully'
+      })
+      
+      // Redirect to the newly created game
+      router.push(`/game/${result.game_id}`)
     } catch (error) {
       console.error('Error creating game:', error)
-      // Handle error (e.g., show an error message to the user)
+      addToast({
+        type: 'error',
+        title: 'Creation Failed',
+        message: 'Failed to create game. Please try again.'
+      })
     } finally {
       setIsLoading(false)
     }
